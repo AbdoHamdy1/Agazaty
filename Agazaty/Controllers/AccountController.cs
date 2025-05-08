@@ -472,7 +472,7 @@ namespace Agazaty.Controllers
                 catch (Exception ex)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError,
-                        $"Failed to retrieve users: {ex.Message}");
+                    $"حدث خطأ أثناء استرجاع بيانات المستخدمين: {ex.Message}");
                 }
 
                 // 2. Create Excel package
@@ -1587,10 +1587,11 @@ namespace Agazaty.Controllers
         {
             // 1. Validate File
             if (file == null || file.Length == 0)
-                return BadRequest("No file uploaded.");
+                return BadRequest(new { Message = "No file uploaded." });
 
             if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                return BadRequest("Only .xlsx files are allowed.");
+                return BadRequest(new { Message = "يُسمح فقط بملفات .xlsx." });
+
 
             var results = new List<(int Row, string Message, bool IsSuccess)>();
             using var stream = new MemoryStream();
@@ -1604,7 +1605,8 @@ namespace Agazaty.Controllers
             int rowCount = worksheet.Dimension?.Rows ?? 0;
 
             if (rowCount < 2)
-                return BadRequest("Excel file has no data rows.");
+              return BadRequest(new { Message = "ملف الإكسيل لا يحتوي على بيانات." });
+
 
             // Define column indexes
             const int UserNameCol = 1;

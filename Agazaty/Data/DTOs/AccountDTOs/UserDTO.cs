@@ -15,6 +15,7 @@ namespace Agazaty.Data.DTOs.AccountDTOs
         public string? RoleName { get; set; }
         public string? DepartmentName { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public string UserName { get; set; }
         public int NonChronicSickLeavesCount { get; set; }
         public int NormalLeavesCount { get; set; }
         public int CasualLeavesCount { get; set; }

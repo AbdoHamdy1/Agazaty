@@ -35,13 +35,14 @@ namespace Agazaty.Controllers
                 var holidays = await _base.GetAll();
                 if (!holidays.Any())
                 {
-                    return NotFound(new { Message = "No holidays found." });
+                    return NotFound(new { Message = "لا توجد إجازات رسمية." });
                 }
                 return Ok(holidays);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
+                return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
+
             }
         }
         //[Authorize(Roles = "مدير الموارد البشرية")]
@@ -50,20 +51,20 @@ namespace Agazaty.Controllers
         {
             if (holidayID <= 0)
             {
-                return BadRequest(new { Message = "Invalid department Id" });
+                return BadRequest(new { Message = "معرف القسم غير صالح." });
             }
             try
             {
                 var holiday = await _base.Get(h => h.Id == holidayID);
                 if (holiday == null)
                 {
-                    return NotFound(new { Message = "No department found." });
+                    return NotFound(new { Message = "لم يتم العثور على قسم." });
                 }
                 return Ok(holiday);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
+                return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
         //[Authorize(Roles = "مدير الموارد البشرية")]
@@ -74,7 +75,8 @@ namespace Agazaty.Controllers
             {
                 if (model == null)
                 {
-                    return BadRequest(new { Message = "Invalid holiday data." });
+                    return BadRequest(new { Message = "بيانات الإجازة غير صحيحة." });
+
                 }
                 if (!ModelState.IsValid)
                 {
@@ -83,7 +85,8 @@ namespace Agazaty.Controllers
                 var sameholiday = await _base.Get(h => h.Date.Date == model.Date.Date);
                 if (sameholiday != null)
                 {
-                    return BadRequest(new { Message = "There is already holiday with this date." });
+                    return BadRequest(new { Message = "يوجد بالفعل عطلة في هذا التاريخ." });
+
                 }
 
                 var holiday = _mapper.Map<Holiday>(model);
@@ -108,7 +111,7 @@ namespace Agazaty.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
+                return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
         //[Authorize(Roles = "مدير الموارد البشرية")]
@@ -117,19 +120,20 @@ namespace Agazaty.Controllers
         {
             if (holidayID <= 0)
             {           
-                return BadRequest(new { Message = "Invalid holiday data." });
+                return BadRequest(new { Message = "بيانات الإجازة غير صحيحة." });
             }
             var OldHoliday = await _base.Get(h => h.Id == holidayID);
             if (OldHoliday.Date.Date == model.Date.Date)
             {
                 _mapper.Map(model, OldHoliday);
                 await _base.Update(OldHoliday);
-                return Ok(new { Message = $"Holiday has been successfully updated.", Holiday = OldHoliday });
+                return Ok(new { Message = "تم تحديث العطلة بنجاح.", Holiday = OldHoliday });
+
             }
             var sameholiday = await _base.Get(h => h.Date.Date == model.Date.Date);
             if (sameholiday != null)
             {
-                return BadRequest(new { Message = "There is already holiday with this date." });
+                return BadRequest(new { Message = "يوجد بالفعل عطلة في هذا التاريخ." });
             }
 
             try
@@ -141,7 +145,8 @@ namespace Agazaty.Controllers
                 var holiday = await _base.Get(d => d.Id == holidayID);
                 if (holiday == null)
                 {
-                    return NotFound(new { Message = "Holiday is not found." });
+                    return NotFound(new { Message = "لم يتم العثور على العطلة." });
+
                 }
                 else // old date wrong
                 {
@@ -179,12 +184,12 @@ namespace Agazaty.Controllers
                         await _accountService.Update(user);
                     }
                 }
+                return Ok(new { Message = "تم تحديث العطلة بنجاح.", Holiday = holiday });
 
-                return Ok(new { Message = $"Holiday has been successfully updated.", Holiday = holiday });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
+                return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
         //[Authorize(Roles = "مدير الموارد البشرية")]
@@ -193,7 +198,7 @@ namespace Agazaty.Controllers
         {
             if (holidayID <= 0)
             {
-                return BadRequest(new { Message = "Invalid holiday Id." });
+                return BadRequest(new { Message = "معرف العطلة غير صالح." });
             }
 
             try
@@ -202,7 +207,7 @@ namespace Agazaty.Controllers
 
                 if (holiday == null)
                 {
-                    return NotFound(new { Message = "No holidays found." });
+                   return NotFound(new { Message = "لم يتم العثور على عطلات." });
                 }
                 await _base.Remove(holiday);
 
@@ -217,11 +222,12 @@ namespace Agazaty.Controllers
                         user.NormalLeavesCount--;
                     }
                 }
-                return Ok(new { Message = $"Holiday has been successfully deleted."});
+                return Ok(new { Message = "تم حذف العطلة بنجاح." });
+
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
+                return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
     }

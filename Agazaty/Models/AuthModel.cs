@@ -14,6 +14,7 @@ namespace Agazaty.Models
         public int PermitLeavesCount { get; set; }
         public string RoleId { get; set; }
         public string RoleName { get; set; }
+        public int Position {  get; set; }
         public string Message { get; set; }
         public bool IsAuthenticated { get; set; }
         public string Token { get; set; }

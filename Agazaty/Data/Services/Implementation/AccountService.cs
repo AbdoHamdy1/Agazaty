@@ -382,6 +382,7 @@ namespace Agazaty.Data.Services.Implementation
                 SickLeavesCount = user.NonChronicSickLeavesCount,
                 Email = user.Email,
                 Id = user.Id,
+                Position=user.position,
             };
             if (user.Departement_ID != null)
             {
