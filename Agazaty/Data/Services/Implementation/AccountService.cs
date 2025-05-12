@@ -383,6 +383,7 @@ namespace Agazaty.Data.Services.Implementation
                 Email = user.Email,
                 Id = user.Id,
                 Position=user.position,
+                Active=user.Active
             };
             if (user.Departement_ID != null)
             {

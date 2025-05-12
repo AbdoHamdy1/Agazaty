@@ -128,7 +128,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetRoleOfUser/{userID}")]
         public async Task<IActionResult> GetRoleOfUser([FromRoute] string userID)
         {
@@ -149,7 +149,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
         [HttpGet("GetUserByNationalId/{NationalId}")]
         public async Task<IActionResult> GetUserByNationalId(string NationalId)
         {
@@ -209,7 +209,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
         [HttpGet("GetAllNonActiveUsers")]
         public async Task<IActionResult> GetAllNonActiveUsers()
         {
@@ -240,7 +240,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetAllAvailabelCoworkers/{userId}")]
         public async Task<IActionResult> GetAllAvailableCoworkers(string userId)
         {
@@ -271,7 +271,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize]
         [HttpGet("GetAllUsersByDepartmentId/{DepartmentId}")]
         public async Task<IActionResult> GetAllUsersByDepartmentId(int DepartmentId)
         {
@@ -454,7 +454,7 @@ namespace Agazaty.Controllers
         //        Results = results
         //    });
         //}
-
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("export-active-users-excel")]
         public async Task<IActionResult> ExportActiveUsersExcel()
         {
@@ -809,6 +809,7 @@ namespace Agazaty.Controllers
                     $"An unexpected error occurred: {ex.Message}");
             }
         }
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("export-user-excel/{nationalId}")]
         public async Task<IActionResult> ExportUserExcel(string nationalId)
         {
@@ -902,6 +903,7 @@ namespace Agazaty.Controllers
 
             return File(stream, contentType, fileName);
         }
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPost("export-selected-users-excel")]
         public async Task<IActionResult> ExportSelectedUsersExcel([FromBody] List<string> nationalIds)
         {
@@ -1582,6 +1584,7 @@ namespace Agazaty.Controllers
         //        Results = results
         //    });
         //}
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPost("upload-users-excel")]
         public async Task<IActionResult> UploadUsersExcel(IFormFile file)
         {
@@ -2159,7 +2162,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[AllowAnonymous]
+        [AllowAnonymous]
         [HttpPost("UserLogin")]
         public async Task<IActionResult> Login([FromBody] LogInUserDTO model)
         {
@@ -2171,7 +2174,7 @@ namespace Agazaty.Controllers
                     bool checkPassword = await _accountService.CheckPassword(user, model.Password);
                     if (user is null || !checkPassword)
                     {
-                        return Unauthorized(new { Message = "أسم المستخدم أو كلمة المرور غير صحيحة!" });
+                        return Unauthorized(new { Message = "اسم المستخدم أو كلمة المرور غير صحيحة!" });
                     }
 
                     var res = await _accountService.GetTokenAsync(user);
@@ -2192,7 +2195,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("UpdateUser/{userid}")]
         public async Task<IActionResult> UdpateUser(string userid,[FromBody]UpdateUserDTO model)
         {
@@ -2305,7 +2308,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpPut("UdpateUserForUser/{userid}")]
         public async Task<IActionResult> UdpateUserForUser(string userid, [FromBody] UpdateUserDTOforuser model)
         {
@@ -2348,7 +2351,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("SoftDeleteUser/{userid}")]
         public async Task<IActionResult> SoftDeleteUser(string userid)
         {
@@ -2397,7 +2400,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("ReActiveUser/{userid}")]
         public async Task<IActionResult> ReActiveUser(string userid)
         {
@@ -2435,4 +2438,3 @@ namespace Agazaty.Controllers
         }
     }
 }
-

@@ -33,7 +33,7 @@ namespace Agazaty.Controllers
             _leaveValidationService = leaveValidationService;
             _appDbContext = appDbContext;
         }
-        //[Authorize]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("GetSickLeaveById/{leaveID:int}")]
         public async Task<IActionResult> GetSickLeaveById(int leaveID)
         {
@@ -58,7 +58,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetAllSickLeavesByUserID/{userID}")]
         public async Task<IActionResult> GetAllSickLeavesByUserID(string userID)
         {
@@ -86,7 +86,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
         [HttpGet("GetAllSickLeave")]
         public async Task<IActionResult> GetAllSickLeave()
         {
@@ -108,7 +108,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetAllSickLeavesByUserIDAndYear/{userID}/{year:int}")]
         public async Task<IActionResult> GetAllSickLeavesByUserIDAndYear(string userID, int year)
         {
@@ -165,7 +165,7 @@ namespace Agazaty.Controllers
         //        return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
         //    }
         //}
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("GetAllWaitingCertifiedSickLeaves")]
         public async Task<IActionResult> GetAllCertifiedWaitingSickLeaves()
         {
@@ -191,7 +191,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("GetAllWaitingSickLeaves")]
         public async Task<IActionResult> GetAllWaitingSickLeaves()
         {
@@ -217,7 +217,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpPost("CreateSickLeave")]
         public async Task<IActionResult> CreateSickLeave([FromBody]CreateSickLeaveDTO model)
         {
@@ -254,7 +254,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("UpdateMedicalCommiteAddressResponse/{leaveID:int}/{address}")]
         public async Task<IActionResult> UpdateMedicalCommiteAddressResponse(int leaveID, string address)
         {
@@ -293,7 +293,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("UpdateSickLeave/{leaveID}")]
         public async Task<IActionResult> UpdateSickLeave(int leaveID, [FromBody]UpdateSickLeaveDTO model)
         {
@@ -375,7 +375,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpDelete("DeleteSickLeave/{leaveID}")]
         public async Task<IActionResult> DeleteSickLeave(int leaveID)
         {

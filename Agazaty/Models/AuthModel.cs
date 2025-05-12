@@ -19,6 +19,7 @@ namespace Agazaty.Models
         public bool IsAuthenticated { get; set; }
         public string Token { get; set; }
         public bool IsDirectManager { get; set; }
+        public bool Active { get; set; }
 
         //public DateTime ExpiresOn { get; set; }
     }

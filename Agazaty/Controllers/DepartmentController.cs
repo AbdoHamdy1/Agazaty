@@ -26,7 +26,7 @@ namespace Agazaty.Controllers
             _base = Ebase;
             _accountService = accountService;
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية,عميد الكلية")]
         [HttpGet("GetAllDepartments")]
         public async Task<IActionResult> GetAllDepartments()
         {
@@ -52,7 +52,7 @@ namespace Agazaty.Controllers
             }
         }
         
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("GetDepartmentById/{departmentID:int}")]
         public async Task<IActionResult> GetDepartmentById(int departmentID)
         {
@@ -79,7 +79,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize]
         [HttpGet("GetAllAvailableForDeptCreation/{roleName}")]
         public async Task<IActionResult> GetAllAvailableForDeptCreation(string roleName)
         {
@@ -136,7 +136,7 @@ namespace Agazaty.Controllers
             }
         }
 
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPost("CreateDepartment")]
         public async Task<IActionResult> CreateDepartment([FromBody]CreateDepartmentDTO model)
         {
@@ -187,7 +187,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("UpdateDepartment/{departmentID:int}")]
         public async Task<IActionResult> UpdateDepartment([FromRoute]int departmentID, [FromBody]UpdateDepartmentDTO model)
         {
@@ -247,7 +247,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpDelete("DeleteDepartment/{departmentID:int}")]
         public async Task<IActionResult> DeleteDepartment(int departmentID)
         {

@@ -26,7 +26,8 @@ namespace Agazaty.Controllers
             _accountService = accountService;
             _normalLeavebase = normalLeavebase;
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية,هيئة تدريس,موظف")]
+        [Authorize]
         [HttpGet("GetAllHolidays")]
         public async Task<IActionResult> GetAllHolidays()
         {
@@ -45,7 +46,7 @@ namespace Agazaty.Controllers
 
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("GetHolidayById/{holidayID:int}")]
         public async Task<IActionResult> GetHolidayById(int holidayID)
         {
@@ -67,7 +68,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPost("CreateHoliday")]
         public async Task<IActionResult> CreateHoliday([FromBody] CreateHolidayDTO model)
         {
@@ -114,7 +115,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("UpdateHoliday/{holidayID:int}")]
         public async Task<IActionResult> UpdateHoliday([FromRoute] int holidayID, [FromBody] UpdateHolidayDTO model)
         {
@@ -192,7 +193,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpDelete("DeleteHoliday/{holidayID:int}")]
         public async Task<IActionResult> DeleteHoliday(int holidayID)
         {

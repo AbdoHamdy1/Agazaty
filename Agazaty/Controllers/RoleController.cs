@@ -30,7 +30,7 @@ namespace Agazaty.Controllers
             _accountService = accountService;
             _deptBase = deptBase;
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("GetRoleByID/{roleId}")]
         public async Task<IActionResult> GetRoleByID([FromRoute]string roleId)
         { 
@@ -47,7 +47,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("GetAllUsersInRole/{RoleName}")]
         public async Task<IActionResult> GetAllUsersInRoles(string RoleName)
         {
@@ -76,7 +76,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("GetAllRoles")]
         public async Task<IActionResult> GetAllRoles()
         {
@@ -91,7 +91,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPost("CreateRole")]
         public async Task<IActionResult> CreateRole([FromBody]CreateRoleDTO CR)
         {
@@ -118,7 +118,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("UpdateRole/{roleid}")]
         public async Task<IActionResult> UpdateRole([FromRoute]string roleid, [FromBody]UpdateRoleDTO UR)
         {
@@ -151,7 +151,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpDelete("DeleteRole/{roleid}")]
         public async Task<IActionResult> DeleteRole(string roleid)
         {

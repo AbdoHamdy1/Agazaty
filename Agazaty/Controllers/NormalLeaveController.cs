@@ -64,8 +64,7 @@ namespace Agazaty.Controllers
 
         //    return Ok(new { year, holidays = officialHolidaysByYear[year] });
         //}
-
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetNormalLeaveById/{leaveID:int}")]
         public async Task<IActionResult> GetNormalLeaveById(int leaveID)
         {
@@ -96,7 +95,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpGet("GetAllNormalLeaves")]
         public async Task<IActionResult> GetAllNormalLeaves()
         {
@@ -130,7 +129,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize]
         [HttpGet("GetAllAcceptedNormalLeaves")]
         public async Task<IActionResult> GetAllAcceptedNormalLeaves()
         {
@@ -164,7 +163,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize]
         [HttpGet("GetAllRejectedNormalLeaves")]
         public async Task<IActionResult> GetAllRejectedNormalLeaves()
         {
@@ -197,7 +196,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize]
         [HttpGet("GetAllWaitingNormalLeaves")]
         public async Task<IActionResult> GetAllWaitingNormalLeaves()
         {
@@ -230,7 +229,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("AllNormalLeavesByUserId/{userID}")]
         public async Task<IActionResult> GetAllNormalLeavesByUserID(string userID)
         {
@@ -265,7 +264,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("AcceptedByUserId/{userID}")]
         public async Task<IActionResult> GetAllAcceptedNormalLeavesByUserID(string userID)
         {
@@ -303,7 +302,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("AcceptedByUserIdAndYear/{userID}/{year:int}")]
         public async Task<IActionResult> GetAllAcceptedNormalLeavesByUserIDAndYear(string userID, int year)
         {
@@ -351,7 +350,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("RejectedByUserId/{userID}")]
         public async Task<IActionResult> GetAllRejectedNormalLeavesByUserID(string userID)
         {
@@ -390,7 +389,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("WaitingByUserID/{userID}")]
         public async Task<IActionResult> GetAllWaitingNormalLeavesByUserID(string userID)
         {
@@ -429,7 +428,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية")]
+        [Authorize(Roles = "عميد الكلية,أمين الكلية")]
         [HttpGet("WaitingByGeneral_ManagerID/{general_managerID}")]
         public async Task<IActionResult> GetAllWaitingNormalLeavesByGeneral_ManagerID(string general_managerID)
         {
@@ -474,7 +473,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("WaitingByDirect_ManagerID/{direct_managerID}")]
         public async Task<IActionResult> GetAllWaitingNormalLeavesByDirect_ManagerID(string direct_managerID)
         {
@@ -517,7 +516,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("WaitingByCoWorkerID/{coworkerID}")]
         public async Task<IActionResult> GetAllWaitingNormalLeavesByCoWorkerID(string coworkerID)
         {
@@ -556,13 +555,13 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetLeaveTypes")]
         public async Task<IActionResult> GetLeaveTypes()
         {
             return Ok(LeaveTypes.res);
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPost("MinusOrAddNormalLeavesToUser/{UserID}")]
         public async Task<IActionResult> MinusOrAddNormalLeavesToUser(string UserID, [FromBody] MinusOrAddNormalLeavesToUser model)
         {
@@ -596,7 +595,7 @@ namespace Agazaty.Controllers
             }
 
         }
-        //[Authorize]
+        [Authorize]
         [HttpPost("CreateNormalLeave")]
         public async Task<IActionResult> CreateNormalLeave([FromBody] CreateNormalLeaveDTO model)
         {
@@ -834,7 +833,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("UpdateNormalLeave/{leaveID:int}")]
         public async Task<IActionResult> UpdateNormalLeave(int leaveID, [FromBody] UpdateNormalLeaveDTO model) // قطع الاجازة
         {
@@ -1034,7 +1033,7 @@ namespace Agazaty.Controllers
             }
 
         }
-        //[Authorize(Roles = "عميد الكلية,أمين الكلية")]
+        [Authorize(Roles = "عميد الكلية,أمين الكلية")]
         [HttpPut("UpdateGeneralManagerDecision/{leaveID:int}")]
         public async Task<IActionResult> UpdateGeneralManagerDecision(int leaveID, [FromBody] GeneralManagerDecisionDTO model)
         {
@@ -1186,7 +1185,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء التحديث.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpPut(("UpdateDirectManagerDecision/{leaveID:int}"))]
         public async Task<IActionResult> UpdateDirectManagerDecision(int leaveID, [FromBody] DirectManagerDecisionDTO model)
         {
@@ -1259,7 +1258,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء التحديث.", error = ex.Message });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpPut("UpdateCoworkerDecision/{leaveID:int}")]
         public async Task<IActionResult> UpdateCoworkerDecision([FromRoute] int leaveID, [FromQuery] bool CoworkerDecision)
         {
@@ -1340,7 +1339,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء التحديث.", error = ex.Message });
             }
         }
-        //[Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpDelete("DeleteNormalLeave/{leaveID}")]
         public async Task<IActionResult> DeleteNormalLeave([FromRoute] int leaveID)
         {
