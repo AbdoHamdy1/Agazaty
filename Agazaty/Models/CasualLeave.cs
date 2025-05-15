@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NormalLeaveTask.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Agazaty.Models
@@ -10,6 +11,9 @@ namespace Agazaty.Models
         public DateTime RequestDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        [Required]
+        public string General_ManagerID { get; set; }
+        public bool LeaveStatus { get; set; }
         public int Year { get; set; }
         public string? Notes { get; set; }
         public int Days { get; set; }

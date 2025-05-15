@@ -195,6 +195,7 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
+        [Consumes("multipart/form-data")]
         [HttpPost("CreatePermitLeave", Name = "CreatePermitLeave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -260,6 +261,7 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
+        [Consumes("multipart/form-data")]
         [HttpPut("UpdatePermitLeave/{leaveID:int}", Name = "UpdatePermitLeave")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
