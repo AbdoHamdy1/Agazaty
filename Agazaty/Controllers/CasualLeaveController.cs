@@ -32,7 +32,7 @@ namespace Agazaty.Controllers
             _leaveValidationService = leaveValidationService;
             _departmentBase = basedepartment;
         }
-        [Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
         [HttpGet("GetCasualLeaveById/{leaveID:int}", Name = "GetCasualLeave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,7 +48,8 @@ namespace Agazaty.Controllers
                     return NotFound(new { Message = "لم يتم العثور على أي إجازة عارضة." });
                 }
                 var leave = _mapper.Map<CasualLeaveDTO>(casualLeave);
-                var user = await _accountService.FindById(leave.UserId);
+                var user = await _accountService.FindById(leave.UserID);
+                leave.PhoneNumber = user.PhoneNumber;
                 var generalManager = await _accountService.FindById(casualLeave.General_ManagerID);
                 leave.GeneralManagerName = $"{generalManager.FirstName} {generalManager.SecondName} {generalManager.ThirdName} {generalManager.ForthName}";
                 leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
@@ -81,7 +82,7 @@ namespace Agazaty.Controllers
                 var leaves = _mapper.Map<IEnumerable<CasualLeaveDTO>>(casualLeaves);
                 foreach(var leave in leaves)
                 {
-                    var user = await _accountService.FindById(leave.UserId);
+                    var user = await _accountService.FindById(leave.UserID);
                     var generalManager = await _accountService.FindById(leave.General_ManagerID);
                     leave.GeneralManagerName = $"{generalManager.FirstName} {generalManager.SecondName} {generalManager.ThirdName} {generalManager.ForthName}";
                     leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
@@ -117,7 +118,7 @@ namespace Agazaty.Controllers
                 var leaves = _mapper.Map<IEnumerable<CasualLeaveDTO>>(casualLeaves);
                 foreach (var leave in leaves)
                 {
-                    var user = await _accountService.FindById(leave.UserId);
+                    var user = await _accountService.FindById(leave.UserID);
                     var generalManager = await _accountService.FindById(leave.General_ManagerID);
                     leave.GeneralManagerName = $"{generalManager.FirstName} {generalManager.SecondName} {generalManager.ThirdName} {generalManager.ForthName}";
                     leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
@@ -154,7 +155,7 @@ namespace Agazaty.Controllers
                 var leaves = _mapper.Map<IEnumerable<CasualLeaveDTO>>(casualLeaves);
                 foreach (var leave in leaves)
                 {
-                    var user = await _accountService.FindById(leave.UserId);
+                    var user = await _accountService.FindById(leave.UserID);
                     leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
                 }
                 return Ok(leaves);
@@ -182,12 +183,12 @@ namespace Agazaty.Controllers
                 }
                 if (await _leaveValidationService.IsSameLeaveOverlapping(model.UserId, model.StartDate, model.EndDate, "CasualLeave"))
                 {
-                    return BadRequest("لديك بالفعل إجازة عارضة في هذه الفترة!");
+                    return BadRequest(new { Message = "لديك بالفعل إجازة عارضة في هذه الفترة!" });
                 }
 
                 if (await _leaveValidationService.IsLeaveOverlapping(model.UserId, model.StartDate, model.EndDate, "CasualLeave"))
                 {
-                    return BadRequest("لديك بالفعل إجازة من نوع آخر في هذه الفترة!");
+                    return BadRequest(new { Message = "لديك بالفعل إجازة من نوع آخر في هذه الفترة!" });
                 }
                 ApplicationUser user = await _accountService.FindById(model.UserId);
                 //var allCasualLeave = await _base.GetAll(u => u.UserId == user.Id);
@@ -315,7 +316,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        [Authorize(Roles = "عميد الكلية,أمين الكلية")]
+        //[Authorize(Roles = "عميد الكلية,أمين الكلية")]
         [HttpGet("GetAllWaitingCasualLeavesByGeneral_ManagerID/{general_managerID}", Name = "GetAllWaitingCasualLeavesByGeneral_ManagerID")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -340,6 +341,7 @@ namespace Agazaty.Controllers
                 {
                     var leave = _mapper.Map<CasualLeaveDTO>(casualleave);
                     var user = await _accountService.FindById(casualleave.UserId);
+                    leave.PhoneNumber = user.PhoneNumber;
                     var generalManager = await _accountService.FindById(casualleave.General_ManagerID);
                     leave.GeneralManagerName = $"{generalManager.FirstName} {generalManager.SecondName} {generalManager.ThirdName} {generalManager.ForthName}";
                     leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";

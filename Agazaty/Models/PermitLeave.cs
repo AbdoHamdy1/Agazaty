@@ -14,5 +14,8 @@ namespace Agazaty.Models
         public string UserId { get; set; }
         public PermitLeaveImage? PermitLeaveImage { get; set; }
         public ApplicationUser User { get; set; }
+
+        //public string LeaveType { get; set; } = "تصريح";
+
     }
 }

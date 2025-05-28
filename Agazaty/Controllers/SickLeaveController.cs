@@ -3,6 +3,7 @@ using Agazaty.Data.DTOs.CasualLeaveDTOs;
 using Agazaty.Data.DTOs.RoleDTOs;
 using Agazaty.Data.DTOs.SickLeaveDTOs;
 using Agazaty.Data.Services;
+using Agazaty.Data.Services.Implementation;
 using Agazaty.Data.Services.Interfaces;
 using Agazaty.Models;
 using AutoMapper;
@@ -33,7 +34,7 @@ namespace Agazaty.Controllers
             _leaveValidationService = leaveValidationService;
             _appDbContext = appDbContext;
         }
-        [Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
         [HttpGet("GetSickLeaveById/{leaveID:int}")]
         public async Task<IActionResult> GetSickLeaveById(int leaveID)
         {
@@ -50,6 +51,7 @@ namespace Agazaty.Controllers
 
                 var leave = _mapper.Map<SickLeaveDTO>(sickLeave);
                 var user = await _accoutnService.FindById(leave.UserID);
+                leave.PhoneNumber = user.PhoneNumber;
                 leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
                 return Ok(leave);
             }
@@ -191,13 +193,40 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpGet("GetAllWaitingSickLeaves")]
-        public async Task<IActionResult> GetAllWaitingSickLeaves()
+        [Authorize(Roles = "عميد الكلية,أمين الكلية")]
+        [HttpGet("GetAllWaitingSickLeavesForGeneralManager/{general_managerid}")]
+        public async Task<IActionResult> GetAllWaitingSickLeavesForGeneralManager(string general_managerid)
         {
             try
             {
-                var waitingSickLeaves = await _base.GetAll(s => s.RespononseDoneForMedicalCommitte == false);
+                var waitingSickLeaves = await _base.GetAll(s => s.RespononseDoneForMedicalCommitte == false && s.GeneralManagerDecision == false &&s.General_ManagerID==general_managerid);
+
+                if (waitingSickLeaves.Any())
+                {
+                    var leaves = _mapper.Map<IEnumerable<SickLeaveDTO>>(waitingSickLeaves);
+                    foreach (var leave in leaves)
+                    {
+                        var user = await _accoutnService.FindById(leave.UserID);
+                        leave.PhoneNumber=user.PhoneNumber;
+                        leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
+                    }
+                    return Ok(leaves);
+                }
+
+                return NotFound("لم يتم العثور على إجازات مرضية في الانتظار.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
+            }
+        }
+        [Authorize(Roles = "مدير الموارد البشرية")]
+        [HttpGet("GetAllWaitingSickLeavesForHR")]
+        public async Task<IActionResult> GetAllWaitingSickLeavesForHR()
+        {
+            try
+            {
+                var waitingSickLeaves = await _base.GetAll(s => s.RespononseDoneForMedicalCommitte == false &&s.GeneralManagerDecision==true);
 
                 if (waitingSickLeaves.Any())
                 {
@@ -238,14 +267,44 @@ namespace Agazaty.Controllers
                 {
                     return BadRequest(new { message = "لديك طلب إجازة قيد الانتظار ولم يتم الرد عليه بعد." });
                 }
+                ApplicationUser user = await _accoutnService.FindById(model.UserID);
                 SickLeave sickLeave = _mapper.Map<SickLeave>(model);
+
+                if (await _accoutnService.IsInRoleAsync(user, "هيئة تدريس"))
+                {
+                    var res = await _accoutnService.GetAllUsersInRole("عميد الكلية");
+                    var Dean = res.FirstOrDefault();
+                    if (Dean == null) { return BadRequest(new { Message = "لا يوجد مستخدم لديه دور العميد." }); }
+                    sickLeave.General_ManagerID = Dean.Id;
+                }
+                else if (await _accoutnService.IsInRoleAsync(user, "موظف"))
+                {
+                    var res = await _accoutnService.GetAllUsersInRole("أمين الكلية");
+                    var Supervisor = res.FirstOrDefault();
+                    if (Supervisor == null) { return BadRequest(new { Message = "لا يوجد مستخدم لديه دور أمين كلية." }); }
+                    sickLeave.General_ManagerID = Supervisor.Id;
+                }
+                else if (await _accoutnService.IsInRoleAsync(user, "أمين الكلية"))
+                {
+                    // if أمين الكلية made a leave request
+                    var res = await _accoutnService.GetAllUsersInRole("عميد الكلية");
+                    var Dean = res.FirstOrDefault();
+                    if (Dean == null) { return BadRequest(new { Message = "لا يوجد مستخدم لديه دور العميد." }); }
+                    sickLeave.General_ManagerID = Dean.Id;
+                }
+                else if (await _accoutnService.IsInRoleAsync(user, "مدير الموارد البشرية"))
+                {
+                    var res = await _accoutnService.GetAllUsersInRole("أمين الكلية");
+                    var Supervisor = res.FirstOrDefault();
+                    if (Supervisor == null) { return BadRequest(new { Message = "لا يوجد مستخدم لديه دور أمين كلية." }); }
+                    sickLeave.General_ManagerID = Supervisor.Id;
+                }
                 sickLeave.RequestDate = DateTime.UtcNow.Date;
                 sickLeave.Year = sickLeave.RequestDate.Year;
 
                 await _base.Add(sickLeave);
 
                 var leave = _mapper.Map<SickLeaveDTO>(sickLeave);
-                var user = await _accoutnService.FindById(leave.UserID);
                 leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
                 return CreatedAtAction(nameof(GetSickLeaveById), new { leaveID = sickLeave.Id }, leave);
             }
@@ -254,6 +313,39 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
+        [Authorize(Roles = "عميد الكلية,أمين الكلية")]
+        [HttpPut("TransferToHR/{leaveID:int}")]
+        public async Task<IActionResult> TransferToHR(int leaveID)
+        {
+            if (leaveID <= 0)
+            {
+                return BadRequest("معرّف الإجازة غير صالح.");
+            }
+
+            try
+            {
+                var sickLeave = await _base.Get(s => s.Id == leaveID);
+
+                if (sickLeave == null)
+                {
+                    return NotFound("لم يتم العثور على طلب إجازة مرضية.");
+                }
+
+                // Update fields
+                sickLeave.GeneralManagerDecision = true;
+                //var leave = _mapper.Map<SickLeaveDTO>(sickLeave);
+                //var user = await _accoutnService.FindById(leave.UserID);
+                //leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
+                await _base.Update(sickLeave);
+
+                return Ok(new { Message = "تم الأحالة لرئيس الموارد البشرية."});
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
+            }
+        }
+
         [Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("UpdateMedicalCommiteAddressResponse/{leaveID:int}/{address}")]
         public async Task<IActionResult> UpdateMedicalCommiteAddressResponse(int leaveID, string address)
@@ -270,7 +362,7 @@ namespace Agazaty.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var sickLeave = await _base.Get(s => s.Id == leaveID);
+                var sickLeave = await _base.Get(s => s.Id == leaveID&&s.GeneralManagerDecision==true);
 
                 if (sickLeave == null)
                 {

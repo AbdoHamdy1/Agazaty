@@ -95,7 +95,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        [Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize(Roles = "مدير الموارد البشرية,عميد الكلية")]
         [HttpGet("GetAllNormalLeaves")]
         public async Task<IActionResult> GetAllNormalLeaves()
         {

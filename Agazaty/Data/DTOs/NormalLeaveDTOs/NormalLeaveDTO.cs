@@ -30,5 +30,7 @@ namespace Agazaty.Data.DTOs.NormalLeaveDTOs
         public LeaveStatus LeaveStatus { get; set; }
         public Holder Holder { get; set; }
         public RejectedBy RejectedBy { get; set; }
+        public string LeaveType { get; set; } = "اعتيادية";
+
     }
 }

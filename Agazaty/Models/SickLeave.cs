@@ -23,9 +23,13 @@ namespace Agazaty.Models
         public int? Days { get; set; }
         public bool Chronic { get; set; }
         public bool Certified { get; set; }
+        public bool GeneralManagerDecision { get; set; } = false;
+        [Required]
+        public string General_ManagerID { get; set; }
         [Required]
         [ForeignKey("User")]
         public string UserID { get; set; }
         public ApplicationUser User { get; set; }
+        //public string LeaveType { get; set; } = "مرضية";
     }
 }

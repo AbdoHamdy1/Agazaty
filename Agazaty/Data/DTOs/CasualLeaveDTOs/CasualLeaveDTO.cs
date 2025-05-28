@@ -17,7 +17,13 @@ namespace Agazaty.Data.DTOs.CasualLeaveDTOs
         public string? Notes { get; set; }
         public string? Days { get; set; }
         public string UserName { get; set; }
+        public string PhoneNumber { get; set; }
+
         [Required]
-        public string UserId { get; set; }
+        public string UserID { get; set; }
+
+        //public string UserId { get; set; }
+        public string LeaveType { get; set; } = "عارضة";
+
     }
 }

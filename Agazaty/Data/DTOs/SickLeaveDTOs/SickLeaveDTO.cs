@@ -20,7 +20,14 @@ namespace Agazaty.Data.DTOs.SickLeaveDTOs
         public int? Days { get; set; }
         public bool Chronic { get; set; }
         public bool Certified { get; set; }
+        public string PhoneNumber { get; set; }
+
         public string UserName { get; set; }
         public string UserID { get; set; }
+        public string General_ManagerID { get; set; }
+        public bool GeneralManagerDecision { get; set; }
+
+        public string LeaveType { get; set; } = "مرضي";
+
     }
 }

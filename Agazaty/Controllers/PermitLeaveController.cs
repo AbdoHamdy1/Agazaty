@@ -95,7 +95,7 @@ namespace Agazaty.Controllers
                 var leaves = _mapper.Map<IEnumerable<PermitLeaveDTO>>(permitLeaves);
                 foreach(var leave in leaves)
                 {
-                    var user = await _accountService.FindById(leave.UserId);
+                    var user = await _accountService.FindById(leave.UserID);
                     leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
                 }
                 return Ok(leaves);
@@ -124,7 +124,7 @@ namespace Agazaty.Controllers
                 var leaves = _mapper.Map<IEnumerable<PermitLeaveDTO>>(permitLeaves);
                 foreach (var leave in leaves)
                 {
-                    var user = await _accountService.FindById(leave.UserId);
+                    var user = await _accountService.FindById(leave.UserID);
                     leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
                 }
                 return Ok(leaves);
@@ -154,7 +154,7 @@ namespace Agazaty.Controllers
                 var leaves = _mapper.Map<IEnumerable<PermitLeaveDTO>>(permitLeaves);
                 foreach (var leave in leaves)
                 {
-                    var user = await _accountService.FindById(leave.UserId);
+                    var user = await _accountService.FindById(leave.UserID);
                     leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
                 }
                 return Ok(leaves);
@@ -184,7 +184,7 @@ namespace Agazaty.Controllers
                 var leaves = _mapper.Map<IEnumerable<PermitLeaveDTO>>(permitLeaves);
                 foreach (var leave in leaves)
                 {
-                    var user = await _accountService.FindById(leave.UserId);
+                    var user = await _accountService.FindById(leave.UserID);
                     leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
                 }
                 return Ok(leaves);
