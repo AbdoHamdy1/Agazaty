@@ -7,6 +7,6 @@ namespace Agazaty.Data.DTOs.PermitLeavesDTOs
     {
         public Guid Id { get; set; }
         public string ImageUrl { get; set; }
-        public int LeaveId { get; set; }
+        public Guid LeaveId { get; set; }
     }
 }

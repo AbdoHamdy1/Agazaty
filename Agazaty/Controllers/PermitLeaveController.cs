@@ -71,6 +71,8 @@ namespace Agazaty.Controllers
                 var leave = _mapper.Map<PermitLeaveDTO>(permitLeave);
                 var user = await _accountService.FindById(permitLeave.UserId);
                 leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
+                leave.FirstName= user.FirstName;
+                leave.SecondName= user.SecondName;
                 return Ok(leave);
             }
             catch (Exception ex)

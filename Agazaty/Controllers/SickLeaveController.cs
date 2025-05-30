@@ -53,6 +53,8 @@ namespace Agazaty.Controllers
                 var user = await _accoutnService.FindById(leave.UserID);
                 leave.PhoneNumber = user.PhoneNumber;
                 leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
+                leave.FirstName = user.FirstName;
+                leave.SecondName = user.SecondName;
                 return Ok(leave);
             }
             catch (Exception ex)

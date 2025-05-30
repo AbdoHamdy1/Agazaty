@@ -88,6 +88,8 @@ namespace Agazaty.Controllers
                 leave.DirectManagerName = $"{directManager.FirstName} {directManager.SecondName} {directManager.ThirdName} {directManager.ForthName}";
                 leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
                 leave.CoworkerName = $"{coworker.FirstName} {coworker.SecondName} {coworker.ThirdName} {coworker.ForthName}";
+                leave.FirstName = user.FirstName;
+                leave.SecondName=user.SecondName;
                 return Ok(leave);
             }
             catch (Exception ex)

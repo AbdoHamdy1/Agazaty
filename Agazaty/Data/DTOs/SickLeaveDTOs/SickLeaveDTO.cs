@@ -21,8 +21,9 @@ namespace Agazaty.Data.DTOs.SickLeaveDTOs
         public bool Chronic { get; set; }
         public bool Certified { get; set; }
         public string PhoneNumber { get; set; }
-
         public string UserName { get; set; }
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
         public string UserID { get; set; }
         public string General_ManagerID { get; set; }
         public bool GeneralManagerDecision { get; set; }

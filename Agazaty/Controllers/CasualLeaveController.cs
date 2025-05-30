@@ -53,6 +53,8 @@ namespace Agazaty.Controllers
                 var generalManager = await _accountService.FindById(casualLeave.General_ManagerID);
                 leave.GeneralManagerName = $"{generalManager.FirstName} {generalManager.SecondName} {generalManager.ThirdName} {generalManager.ForthName}";
                 leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
+                leave.FirstName = user.FirstName;
+                leave.SecondName = user.SecondName;
                 var department = await _departmentBase.Get(d => d.Id == user.Departement_ID);
                 if (department != null)
                 {
