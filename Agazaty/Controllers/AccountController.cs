@@ -272,10 +272,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize]
-        [HttpGet("GetAllUsersByDepartmentId/{DepartmentId}")]
-        public async Task<IActionResult> GetAllUsersByDepartmentId(int DepartmentId)
+        [HttpGet("GetAllUsersByDepartmentId/{DepartmentId:guid}")]
+        public async Task<IActionResult> GetAllUsersByDepartmentId(Guid DepartmentId)
         {
-            if (DepartmentId <= 0)
+            if (DepartmentId == Guid.Empty)
                 return BadRequest(new { Message = "معرف القسم غير صالح." });
             try
             {
@@ -1745,7 +1745,7 @@ namespace Agazaty.Controllers
                         HireDate = hireDate,
                         NationalID = nationalId,
                         position = int.TryParse(worksheet.Cells[row, PositionCol].Text, out var pos) ? pos : 0,
-                        Departement_ID = int.TryParse(worksheet.Cells[row, DepartmentCol].Text, out var dept) ? dept : (int?)null,
+                        Departement_ID = Guid.TryParse(worksheet.Cells[row, DepartmentCol].Text, out var dept) ? dept : (Guid?)null,
                         Disability = disability,
                         Street = worksheet.Cells[row, StreetCol].Text?.Trim(),
                         governorate = worksheet.Cells[row, GovernorateCol].Text?.Trim(),
@@ -2141,6 +2141,7 @@ namespace Agazaty.Controllers
                         {
                             var ReturnedUser = _mapper.Map<UserDTO>(user);
                             ReturnedUser.FullName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
+                            ReturnedUser.RoleName = RoleName;
                             if(user.Departement_ID != null)
                             {
                                 var dpt = await _deptBase.Get(d => d.Id == user.Departement_ID);

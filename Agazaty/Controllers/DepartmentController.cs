@@ -53,10 +53,10 @@ namespace Agazaty.Controllers
         }
         
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpGet("GetDepartmentById/{departmentID:int}")]
-        public async Task<IActionResult> GetDepartmentById(int departmentID)
+        [HttpGet("GetDepartmentById/{departmentID:guid}")]
+        public async Task<IActionResult> GetDepartmentById(Guid departmentID)
         {
-            if (departmentID <= 0)
+            if (departmentID == Guid.Empty)
             {
                 return BadRequest(new { Message = "معرّف القسم غير صالح." });
             }
@@ -188,10 +188,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpPut("UpdateDepartment/{departmentID:int}")]
-        public async Task<IActionResult> UpdateDepartment([FromRoute]int departmentID, [FromBody]UpdateDepartmentDTO model)
+        [HttpPut("UpdateDepartment/{departmentID:guid}")]
+        public async Task<IActionResult> UpdateDepartment([FromRoute]Guid departmentID, [FromBody]UpdateDepartmentDTO model)
         {
-            if (departmentID<=0)
+            if (departmentID == Guid.Empty)
             {
                 return BadRequest("بيانات القسم غير صالحة.");
             }
@@ -248,10 +248,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpDelete("DeleteDepartment/{departmentID:int}")]
-        public async Task<IActionResult> DeleteDepartment(int departmentID)
+        [HttpDelete("DeleteDepartment/{departmentID:guid}")]
+        public async Task<IActionResult> DeleteDepartment(Guid departmentID)
         {
-            if (departmentID <= 0)
+            if (departmentID == Guid.Empty)
             {
                 return BadRequest(new { Message = "معرّف القسم غير صالح." });
             }

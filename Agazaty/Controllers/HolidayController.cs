@@ -47,10 +47,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpGet("GetHolidayById/{holidayID:int}")]
-        public async Task<IActionResult> GetHolidayById(int holidayID)
+        [HttpGet("GetHolidayById/{holidayID:guid}")]
+        public async Task<IActionResult> GetHolidayById(Guid holidayID)
         {
-            if (holidayID <= 0)
+            if (holidayID == Guid.Empty)
             {
                 return BadRequest(new { Message = "معرف القسم غير صالح." });
             }
@@ -116,10 +116,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpPut("UpdateHoliday/{holidayID:int}")]
-        public async Task<IActionResult> UpdateHoliday([FromRoute] int holidayID, [FromBody] UpdateHolidayDTO model)
+        [HttpPut("UpdateHoliday/{holidayID:guid}")]
+        public async Task<IActionResult> UpdateHoliday([FromRoute] Guid holidayID, [FromBody] UpdateHolidayDTO model)
         {
-            if (holidayID <= 0)
+            if (holidayID == Guid.Empty)
             {           
                 return BadRequest(new { Message = "بيانات الإجازة غير صحيحة." });
             }
@@ -194,10 +194,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpDelete("DeleteHoliday/{holidayID:int}")]
-        public async Task<IActionResult> DeleteHoliday(int holidayID)
+        [HttpDelete("DeleteHoliday/{holidayID:guid}")]
+        public async Task<IActionResult> DeleteHoliday(Guid holidayID)
         {
-            if (holidayID <= 0)
+            if (holidayID == Guid.Empty)
             {
                 return BadRequest(new { Message = "معرف العطلة غير صالح." });
             }

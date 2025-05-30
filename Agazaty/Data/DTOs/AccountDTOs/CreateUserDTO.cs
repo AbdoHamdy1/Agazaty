@@ -48,7 +48,7 @@ namespace Agazaty.Data.DTOs.AccountDTOs
         public int NormalLeavesCount { get; set; }
         public int CasualLeavesCount { get; set; }
         public int NonChronicSickLeavesCount { get; set; }
-        public int? Departement_ID { get; set; }
+        public Guid? Departement_ID { get; set; }
         [DefaultValue(0)]
         public int NormalLeavesCount_47 { get; set; }
         [DefaultValue(0)]

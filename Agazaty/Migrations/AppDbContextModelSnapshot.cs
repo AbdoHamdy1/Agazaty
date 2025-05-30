@@ -46,8 +46,8 @@ namespace Agazaty.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Departement_ID")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("Departement_ID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Disability")
                         .HasColumnType("bit");
@@ -196,11 +196,9 @@ namespace Agazaty.Migrations
 
             modelBuilder.Entity("Agazaty.Models.CasualLeave", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Days")
                         .HasColumnType("int");
@@ -240,11 +238,9 @@ namespace Agazaty.Migrations
 
             modelBuilder.Entity("Agazaty.Models.Department", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -271,11 +267,9 @@ namespace Agazaty.Migrations
 
             modelBuilder.Entity("Agazaty.Models.Holiday", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -291,11 +285,9 @@ namespace Agazaty.Migrations
 
             modelBuilder.Entity("Agazaty.Models.NormalLeave", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Accepted")
                         .HasColumnType("bit");
@@ -370,11 +362,9 @@ namespace Agazaty.Migrations
 
             modelBuilder.Entity("Agazaty.Models.PermitLeave", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -395,18 +385,16 @@ namespace Agazaty.Migrations
 
             modelBuilder.Entity("Agazaty.Models.PermitLeaveImage", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LeaveId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("LeaveId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -418,11 +406,9 @@ namespace Agazaty.Migrations
 
             modelBuilder.Entity("Agazaty.Models.SickLeave", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Certified")
                         .HasColumnType("bit");

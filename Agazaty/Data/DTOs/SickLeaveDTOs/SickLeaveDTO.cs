@@ -5,7 +5,7 @@ namespace Agazaty.Data.DTOs.SickLeaveDTOs
 {
     public class SickLeaveDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; } // Changed from int to Guid
         public string Disease { get; set; }
         public DateTime RequestDate { get; set; }
         public string? MedicalCommitteAddress { get; set; }

@@ -7,8 +7,8 @@ namespace Agazaty.Models
 {
     public class NormalLeave
     {
-        [Required]
-        public int ID { get; set; }
+        [Key]
+        public Guid ID { get; set; } = Guid.NewGuid();
         [ForeignKey("User")]
         [Required]
         public string UserID { get; set; }

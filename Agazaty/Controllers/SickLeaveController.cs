@@ -35,10 +35,10 @@ namespace Agazaty.Controllers
             _appDbContext = appDbContext;
         }
         [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
-        [HttpGet("GetSickLeaveById/{leaveID:int}")]
-        public async Task<IActionResult> GetSickLeaveById(int leaveID)
+        [HttpGet("GetSickLeaveById/{leaveID:guid}")]
+        public async Task<IActionResult> GetSickLeaveById(Guid leaveID)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرّف إجازة مرضية غير صالح." });
             try
             {
@@ -314,10 +314,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "عميد الكلية,أمين الكلية")]
-        [HttpPut("TransferToHR/{leaveID:int}")]
-        public async Task<IActionResult> TransferToHR(int leaveID)
+        [HttpPut("TransferToHR/{leaveID:guid}")]
+        public async Task<IActionResult> TransferToHR(Guid leaveID)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
             {
                 return BadRequest("معرّف الإجازة غير صالح.");
             }
@@ -347,10 +347,10 @@ namespace Agazaty.Controllers
         }
 
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpPut("UpdateMedicalCommiteAddressResponse/{leaveID:int}/{address}")]
-        public async Task<IActionResult> UpdateMedicalCommiteAddressResponse(int leaveID, string address)
+        [HttpPut("UpdateMedicalCommiteAddressResponse/{leaveID:guid}/{address}")]
+        public async Task<IActionResult> UpdateMedicalCommiteAddressResponse(Guid leaveID, string address)
         {
-            if (leaveID <= 0 || string.IsNullOrWhiteSpace(address))
+            if (leaveID == Guid.Empty || string.IsNullOrWhiteSpace(address))
             {
                 return BadRequest("معرّف الإجازة أو العنوان غير صالح.");
             }
@@ -386,10 +386,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpPut("UpdateSickLeave/{leaveID}")]
-        public async Task<IActionResult> UpdateSickLeave(int leaveID, [FromBody]UpdateSickLeaveDTO model)
+        [HttpPut("UpdateSickLeave/{leaveID:guid}")]
+        public async Task<IActionResult> UpdateSickLeave(Guid leaveID, [FromBody]UpdateSickLeaveDTO model)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
             {
                 return BadRequest("معرّف الإجازة غير صالح.");
             }
@@ -468,10 +468,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpDelete("DeleteSickLeave/{leaveID}")]
-        public async Task<IActionResult> DeleteSickLeave(int leaveID)
+        [HttpDelete("DeleteSickLeave/{leaveID:guid}")]
+        public async Task<IActionResult> DeleteSickLeave(Guid leaveID)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرّف الإجازة غير صالح." });
             try
             {

@@ -5,7 +5,8 @@ namespace Agazaty.Models
 {
     public class PermitLeave
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
         public double Hours { get; set; }
         [Required]
         public DateTime Date { get; set; }

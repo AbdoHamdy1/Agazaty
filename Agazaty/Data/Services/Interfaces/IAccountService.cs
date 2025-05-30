@@ -17,7 +17,7 @@ namespace Agazaty.Data.Services.Interfaces
         Task<IEnumerable<ApplicationUser>> GetAllNonActiveUsers();
         Task<IEnumerable<ApplicationUser>> GetAllActiveAvailableCoworkers(ApplicationUser user);
         Task<IEnumerable<ApplicationUser>> GetAllUsersInRole(string RoleName);
-        Task<IEnumerable<ApplicationUser>> GetAllUsersByDepartmentId(int DepartmentId);
+        Task<IEnumerable<ApplicationUser>> GetAllUsersByDepartmentId(Guid DepartmentId);
         Task<IEnumerable<string>> GetAllRolesOfUser(ApplicationUser user);
         Task<string> GetFirstRole(ApplicationUser user);
         Task<string> GetDeanORSupervisor(string RoleName);

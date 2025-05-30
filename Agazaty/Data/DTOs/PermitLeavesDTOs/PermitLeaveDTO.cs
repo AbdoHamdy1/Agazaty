@@ -5,7 +5,7 @@ namespace Agazaty.Data.DTOs.PermitLeavesDTOs
 {
     public class PermitLeaveDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public double Hours { get; set; }
         [Required]
         public DateTime Date { get; set; }

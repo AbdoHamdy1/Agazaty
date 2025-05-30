@@ -65,10 +65,10 @@ namespace Agazaty.Controllers
         //    return Ok(new { year, holidays = officialHolidaysByYear[year] });
         //}
         [Authorize]
-        [HttpGet("GetNormalLeaveById/{leaveID:int}")]
-        public async Task<IActionResult> GetNormalLeaveById(int leaveID)
+        [HttpGet("GetNormalLeaveById/{leaveID:guid}")]
+        public async Task<IActionResult> GetNormalLeaveById(Guid leaveID)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرف الإجازة غير صالح." });
             try
             {
@@ -834,10 +834,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpPut("UpdateNormalLeave/{leaveID:int}")]
-        public async Task<IActionResult> UpdateNormalLeave(int leaveID, [FromBody] UpdateNormalLeaveDTO model) // قطع الاجازة
+        [HttpPut("UpdateNormalLeave/{leaveID:guid}")]
+        public async Task<IActionResult> UpdateNormalLeave(Guid leaveID, [FromBody] UpdateNormalLeaveDTO model) // قطع الاجازة
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرّف الإجازة غير صالح." });
 
             try
@@ -1034,10 +1034,10 @@ namespace Agazaty.Controllers
 
         }
         [Authorize(Roles = "عميد الكلية,أمين الكلية")]
-        [HttpPut("UpdateGeneralManagerDecision/{leaveID:int}")]
-        public async Task<IActionResult> UpdateGeneralManagerDecision(int leaveID, [FromBody] GeneralManagerDecisionDTO model)
+        [HttpPut("UpdateGeneralManagerDecision/{leaveID:guid}")]
+        public async Task<IActionResult> UpdateGeneralManagerDecision(Guid leaveID, [FromBody] GeneralManagerDecisionDTO model)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرّف الإجازة غير صالح." });
 
             try
@@ -1186,10 +1186,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize]
-        [HttpPut(("UpdateDirectManagerDecision/{leaveID:int}"))]
-        public async Task<IActionResult> UpdateDirectManagerDecision(int leaveID, [FromBody] DirectManagerDecisionDTO model)
+        [HttpPut(("UpdateDirectManagerDecision/{leaveID:guid}"))]
+        public async Task<IActionResult> UpdateDirectManagerDecision(Guid leaveID, [FromBody] DirectManagerDecisionDTO model)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرّف الإجازة غير صالح." });
 
             try
@@ -1259,10 +1259,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize]
-        [HttpPut("UpdateCoworkerDecision/{leaveID:int}")]
-        public async Task<IActionResult> UpdateCoworkerDecision([FromRoute] int leaveID, [FromQuery] bool CoworkerDecision)
+        [HttpPut("UpdateCoworkerDecision/{leaveID:guid}")]
+        public async Task<IActionResult> UpdateCoworkerDecision([FromRoute] Guid leaveID, [FromQuery] bool CoworkerDecision)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرّف الإجازة غير صالح." });
 
             try
@@ -1340,10 +1340,10 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpDelete("DeleteNormalLeave/{leaveID}")]
-        public async Task<IActionResult> DeleteNormalLeave([FromRoute] int leaveID)
+        [HttpDelete("DeleteNormalLeave/{leaveID:guid}")]
+        public async Task<IActionResult> DeleteNormalLeave([FromRoute] Guid leaveID)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
             {
                 return BadRequest("معرّف الإجازة غير صحيح.");
             }

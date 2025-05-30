@@ -5,7 +5,7 @@ namespace Agazaty.Data.DTOs.NormalLeaveDTOs
 {
     public class NormalLeaveDTO
     {
-        public int ID { get; set; }
+        public Guid ID { get; set; } = Guid.NewGuid();
         public string UserName { get; set; }
         public string CoworkerName { get; set; }
         public string DirectManagerName { get; set; }

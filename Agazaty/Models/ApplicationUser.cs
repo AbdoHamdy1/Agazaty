@@ -40,7 +40,7 @@ namespace Agazaty.Models
         public int CasualLeavesCount { get; set; }
         public int NonChronicSickLeavesCount { get; set; }
         [ForeignKey("Department")]
-        public int? Departement_ID { get; set; }
+        public Guid? Departement_ID { get; set; }
         public Department? Department { get; set; }
         public string? OTP { get; set; }
         public DateTime? OTPExpiry { get; set; }

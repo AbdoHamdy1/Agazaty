@@ -5,11 +5,12 @@ namespace Agazaty.Models
 {
     public class PermitLeaveImage
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
         [Required]
         public string ImageUrl { get; set; }
         [ForeignKey("PermitLeave")]
-        public int LeaveId { get; set; }
+        public Guid LeaveId { get; set; }
         public PermitLeave PermitLeave { get; set; }
     }
 }

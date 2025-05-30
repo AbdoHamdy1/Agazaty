@@ -33,12 +33,12 @@ namespace Agazaty.Controllers
             _departmentBase = basedepartment;
         }
         [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
-        [HttpGet("GetCasualLeaveById/{leaveID:int}", Name = "GetCasualLeave")]
+        [HttpGet("GetCasualLeaveById/{leaveID:guid}", Name = "GetCasualLeave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CasualLeaveDTO>> GetCasualLeaveById(int leaveID)
+        public async Task<ActionResult<CasualLeaveDTO>> GetCasualLeaveById(Guid leaveID)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرّف الإجازة العارضة غير صالح." });
             try
             {
@@ -165,7 +165,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        [Authorize]
+        //[Authorize]
         [HttpPost("CreateCasualLeave", Name = "CreateCasualLeave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -275,13 +275,13 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "عميد الكلية,أمين الكلية")]
-        [HttpPut("UpdateGeneralManagerDecicion/{leaveID:int}", Name = "UpdateGeneralManagerDecicion")]
+        [HttpPut("UpdateGeneralManagerDecicion/{leaveID:guid}", Name = "UpdateGeneralManagerDecicion")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateGeneralManagerDecicion(int leaveID)
+        public async Task<IActionResult> UpdateGeneralManagerDecicion(Guid leaveID)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
             {
                 return BadRequest(new { Message = "معرف الإجازة غير صالح." });
             }
@@ -360,13 +360,13 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
-        [HttpPut("UpdateCasualLeave/{leaveID:int}", Name = "UpdateCasualLeave")]
+        [HttpPut("UpdateCasualLeave/{leaveID:guid}", Name = "UpdateCasualLeave")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateCasualLeave(int leaveID, [FromBody] UpdateCasualLeaveDTO model)
+        public async Task<IActionResult> UpdateCasualLeave(Guid leaveID, [FromBody] UpdateCasualLeaveDTO model)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
             {
                 return BadRequest(new { Message = "معرف الإجازة غير صالح." });
             }
@@ -419,13 +419,13 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
-        [HttpDelete("DeleteCasualLeave/{leaveID:int}", Name = "DeleteCasualLeave")]
+        [HttpDelete("DeleteCasualLeave/{leaveID:guid}", Name = "DeleteCasualLeave")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteCasualLeave(int leaveID)
+        public async Task<IActionResult> DeleteCasualLeave(Guid leaveID)
         {
-            if (leaveID<=0)
+            if (leaveID == Guid.Empty)
             {
                 return BadRequest(new { Message = "معرف الإجازة غير صالح." });
             }

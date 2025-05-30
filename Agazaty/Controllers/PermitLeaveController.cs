@@ -32,12 +32,12 @@ namespace Agazaty.Controllers
             _accountService = accountService;
         }
         [Authorize]
-        [HttpGet("GetPermitLeaveImageByleaveId/{leaveID:int}", Name = "GetPermitLeaveImageByleaveId")]
+        [HttpGet("GetPermitLeaveImageByleaveId/{leaveID:guid}", Name = "GetPermitLeaveImageByleaveId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PermitLeaveDTO>> GetPermitLeaveImageByleaveId(int leaveID)
+        public async Task<ActionResult<PermitLeaveDTO>> GetPermitLeaveImageByleaveId(Guid leaveID)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرف التصريح غير صالح." });
             try
             {
@@ -54,12 +54,12 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpGet("GetPermitLeaveById/{leaveID:int}", Name = "GetPermitLeave")]
+        [HttpGet("GetPermitLeaveById/{leaveID:guid}", Name = "GetPermitLeave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PermitLeaveDTO>> GetPermitLeaveById(int leaveID)
+        public async Task<ActionResult<PermitLeaveDTO>> GetPermitLeaveById(Guid leaveID)
         {
-            if (leaveID <= 0)
+            if (leaveID == Guid.Empty)
                 return BadRequest(new { message = "معرف التصريح غير صالح." });
             try
             {
@@ -262,13 +262,13 @@ namespace Agazaty.Controllers
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
         [Consumes("multipart/form-data")]
-        [HttpPut("UpdatePermitLeave/{leaveID:int}", Name = "UpdatePermitLeave")]
+        [HttpPut("UpdatePermitLeave/{leaveID:guid}", Name = "UpdatePermitLeave")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdatePermitLeave(int leaveID, [FromForm] UpdatePermitLeaveDTO model, IFormFile? file) 
+        public async Task<IActionResult> UpdatePermitLeave(Guid leaveID, [FromForm] UpdatePermitLeaveDTO model, IFormFile? file) 
         {
-            if (leaveID<=0)
+            if (leaveID == Guid.Empty)
             {
                 return BadRequest(new { Message = "معرف التصريح غير صالح." });
             }
@@ -335,13 +335,13 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpDelete("DeletePermitLeave/{leaveID:int}", Name = "DeletePermitLeave")]
+        [HttpDelete("DeletePermitLeave/{leaveID:guid}", Name = "DeletePermitLeave")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeletePermitLeave(int leaveID)
+        public async Task<IActionResult> DeletePermitLeave(Guid leaveID)
         {
-            if (leaveID<=0)
+            if (leaveID == Guid.Empty)
             {
                 return BadRequest(new { Message = "معرف التصريح غير صحيح." });
             }
@@ -374,12 +374,12 @@ namespace Agazaty.Controllers
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
-        [HttpDelete("DeleteImage/{imageId:int}", Name = "DeleteImage")]
+        [HttpDelete("DeleteImage/{imageId:guid}", Name = "DeleteImage")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteImage(int imageId)
+        public async Task<IActionResult> DeleteImage(Guid imageId)
         {
-            if (imageId <= 0)
+            if (imageId == Guid.Empty)
                 return BadRequest(new { Message = "معرف الصورة غير صالح." });
             try
             {

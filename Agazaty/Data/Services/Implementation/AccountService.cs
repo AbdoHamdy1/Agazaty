@@ -168,7 +168,7 @@ namespace Agazaty.Data.Services.Implementation
         {
             return (await _userManager.GetUsersInRoleAsync(RoleName)).Where(u => u.Active == true);
         }
-        public async Task<IEnumerable<ApplicationUser>> GetAllUsersByDepartmentId(int DepartmentId)
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersByDepartmentId(Guid DepartmentId)
         {
             return await _appDbContext.Users.Where(u => u.Departement_ID == DepartmentId && u.Active == true).ToListAsync();
         }

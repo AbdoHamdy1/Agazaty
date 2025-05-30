@@ -6,7 +6,8 @@ namespace Agazaty.Models
 {
     public class SickLeave
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Disease { get; set; }
         public DateTime RequestDate { get; set; }
         public string? MedicalCommitteAddress { get; set; }
@@ -30,6 +31,5 @@ namespace Agazaty.Models
         [ForeignKey("User")]
         public string UserID { get; set; }
         public ApplicationUser User { get; set; }
-        //public string LeaveType { get; set; } = "مرضية";
     }
 }

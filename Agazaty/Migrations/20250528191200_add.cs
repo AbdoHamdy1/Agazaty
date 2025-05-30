@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Agazaty.Migrations
 {
-    public partial class V1 : Migration
+    public partial class add : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,16 +27,29 @@ namespace Agazaty.Migrations
                 name: "Departments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DepartmentType = table.Column<bool>(type: "bit", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ManagerId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Holidays",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Holidays", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,8 +89,8 @@ namespace Agazaty.Migrations
                     position = table.Column<int>(type: "int", nullable: false),
                     NormalLeavesCount = table.Column<int>(type: "int", nullable: false),
                     CasualLeavesCount = table.Column<int>(type: "int", nullable: false),
-                    SickLeavesCount = table.Column<int>(type: "int", nullable: false),
-                    Departement_ID = table.Column<int>(type: "int", nullable: true),
+                    NonChronicSickLeavesCount = table.Column<int>(type: "int", nullable: false),
+                    Departement_ID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     OTP = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OTPExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: false),
@@ -94,6 +107,10 @@ namespace Agazaty.Migrations
                     TakenNormalLeavesCount_81Before2Years = table.Column<int>(type: "int", nullable: false),
                     TakenNormalLeavesCount_81Before1Years = table.Column<int>(type: "int", nullable: false),
                     TakenNormalLeavesCount = table.Column<int>(type: "int", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Governorate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Disability = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -208,12 +225,15 @@ namespace Agazaty.Migrations
                 name: "CasualLeaves",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    General_ManagerID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LeaveStatus = table.Column<bool>(type: "bit", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Days = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -231,8 +251,7 @@ namespace Agazaty.Migrations
                 name: "NormalLeaves",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Direct_ManagerID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     General_ManagerID = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -240,6 +259,7 @@ namespace Agazaty.Migrations
                     RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Days = table.Column<int>(type: "int", nullable: false),
                     NotesFromEmployee = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Accepted = table.Column<bool>(type: "bit", nullable: false),
@@ -268,8 +288,7 @@ namespace Agazaty.Migrations
                 name: "PermitLeaves",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Hours = table.Column<double>(type: "float", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
@@ -289,14 +308,23 @@ namespace Agazaty.Migrations
                 name: "SickLeaves",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Disease = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmployeeAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MedicalCommitteAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RespononseDone = table.Column<bool>(type: "bit", nullable: false),
+                    RespononseDoneForMedicalCommitte = table.Column<bool>(type: "bit", nullable: false),
+                    ResponseDoneFinal = table.Column<bool>(type: "bit", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    governorate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Days = table.Column<int>(type: "int", nullable: true),
+                    Chronic = table.Column<bool>(type: "bit", nullable: false),
+                    Certified = table.Column<bool>(type: "bit", nullable: false),
+                    GeneralManagerDecision = table.Column<bool>(type: "bit", nullable: false),
+                    General_ManagerID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -314,10 +342,9 @@ namespace Agazaty.Migrations
                 name: "PermitLeaveImages",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LeaveId = table.Column<int>(type: "int", nullable: false)
+                    LeaveId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -375,19 +402,20 @@ namespace Agazaty.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CasualLeaves_UserId",
+                name: "IX_CasualLeaves_UserId_StartDate_EndDate",
                 table: "CasualLeaves",
-                column: "UserId");
+                columns: new[] { "UserId", "StartDate", "EndDate" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_NormalLeaves_UserID",
+                name: "IX_NormalLeaves_UserID_StartDate_EndDate",
                 table: "NormalLeaves",
-                column: "UserID");
+                columns: new[] { "UserID", "StartDate", "EndDate" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PermitLeaveImages_LeaveId",
                 table: "PermitLeaveImages",
-                column: "LeaveId");
+                column: "LeaveId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PermitLeaves_UserId",
@@ -395,9 +423,9 @@ namespace Agazaty.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SickLeaves_UserID",
+                name: "IX_SickLeaves_UserID_StartDate_EndDate",
                 table: "SickLeaves",
-                column: "UserID");
+                columns: new[] { "UserID", "StartDate", "EndDate" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -419,6 +447,9 @@ namespace Agazaty.Migrations
 
             migrationBuilder.DropTable(
                 name: "CasualLeaves");
+
+            migrationBuilder.DropTable(
+                name: "Holidays");
 
             migrationBuilder.DropTable(
                 name: "NormalLeaves");
