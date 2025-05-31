@@ -87,6 +87,12 @@ namespace Agazaty.Controllers
                 leave.GeneralManagerName = $"{generalManager.FirstName} {generalManager.SecondName} {generalManager.ThirdName} {generalManager.ForthName}";
                 leave.DirectManagerName = $"{directManager.FirstName} {directManager.SecondName} {directManager.ThirdName} {directManager.ForthName}";
                 leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
+                leave.PhoneNumber = user.PhoneNumber;
+                var department = await _departmentBase.Get(d => d.Id == user.Departement_ID);
+                if (department != null)
+                {
+                    leave.DepartmentName = department.Name;
+                }
                 leave.CoworkerName = $"{coworker.FirstName} {coworker.SecondName} {coworker.ThirdName} {coworker.ForthName}";
                 leave.FirstName = user.FirstName;
                 leave.SecondName=user.SecondName;
