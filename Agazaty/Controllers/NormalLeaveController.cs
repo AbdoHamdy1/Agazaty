@@ -583,18 +583,157 @@ namespace Agazaty.Controllers
                 {
                     return NotFound(new { message = "لا يوجد مستخدم بهذا المعرف." });
                 }
+                string dayText = model.Days == 1 ? "يوم" : "أيام";
                 if (model.Decision)
                 {
                     user.NormalLeavesCount += model.Days;
+
+                    var emailrequest = new EmailRequest
+                    {
+                        Email = user.Email,
+                        Subject = $"تم إضافة عدد {model.Days} أيام لرصيد اجازاتك",
+                        // حساب صيغة الأيام
+
+                        Body = $@"
+                            <!DOCTYPE html>
+                            <html lang='ar'>
+                            <head>
+                              <meta charset='UTF-8'>
+                              <style>
+                                body {{
+                                  font-family: 'Tahoma', sans-serif;
+                                  direction: rtl;
+                                  unicode-bidi: plaintext;
+                                  background-color: #f9f9f9;
+                                  padding: 20px;
+                                }}
+                                .container {{
+                                  max-width: 600px;
+                                  margin: auto;
+                                  background-color: #ffffff;
+                                  border: 1px solid #e0e0e0;
+                                  border-radius: 8px;
+                                  padding: 30px;
+                                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                                  text-align: right;
+                                }}
+                                h2 {{
+                                  color: #2c3e50;
+                                  text-align: center;
+                                }}
+                                p {{
+                                  font-size: 16px;
+                                  color: #333333;
+                                  line-height: 1.6;
+                                }}
+                                .footer {{
+                                  margin-top: 30px;
+                                  text-align: center;
+                                  font-size: 14px;
+                                  color: #777777;
+                                }}
+                                .highlight {{
+                                  color: #27ae60;
+                                  font-weight: bold;
+                                }}
+                              </style>
+                            </head>
+                            <body>
+                              <div class='container'>
+                                <h2>إشعار بزيادة رصيد اجازتك</h2>
+                                <p>عزيزي المستخدم</p>
+                                <p>
+                                  تمت إضافة <span class='highlight'>{model.Days}</span> إلى رصيدك<br />
+                                  السبب: <span class='highlight'>{model.Notes}</span>
+                                </p>
+                                <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>01127471188</strong></p>
+                                <div class='footer'>
+                                  مع تحياتنا<br />
+                                  فريق دعم إجازاتي
+                                </div>
+                              </div>
+                            </body>
+                            </html>"
+                    };
+
+                    await _EmailService.SendEmail(emailrequest);
                 }
                 else
                 {
                     user.NormalLeavesCount -= model.Days;
+                    var emailrequest = new EmailRequest
+                    {
+                        Email = user.Email,
+                        Subject = $"تم خصم عدد {model.Days} من رصيد اجازاتك أيام",
+                        Body = $@"
+                        <!DOCTYPE html>
+                        <html lang='ar'>
+                        <head>
+                          <meta charset='UTF-8'>
+                          <style>
+                            body {{
+                              font-family: 'Tahoma', sans-serif;
+                              direction: rtl;
+                              unicode-bidi: plaintext;
+                              background-color: #f9f9f9;
+                              padding: 20px;
+                            }}
+                            .container {{
+                              max-width: 600px;
+                              margin: auto;
+                              background-color: #ffffff;
+                              border: 1px solid #e0e0e0;
+                              border-radius: 8px;
+                              padding: 30px;
+                              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                              text-align: right;
+                            }}
+                            h2 {{
+                              color: #c0392b;
+                              text-align: center;
+                            }}
+                            p {{
+                              font-size: 16px;
+                              color: #333333;
+                              line-height: 1.6;
+                            }}
+                            .footer {{
+                              margin-top: 30px;
+                              text-align: center;
+                              font-size: 14px;
+                              color: #777777;
+                            }}
+                            .highlight {{
+                              color: #e74c3c;
+                              font-weight: bold;
+                            }}
+                          </style>
+                        </head>
+                        <body>
+                          <div class='container'>
+                            <h2>إشعار بخصم من رصيد اجازاتك</h2>
+                            <p>عزيزي المستخدم</p>
+                            <p>
+                              تم خصم <span class='highlight'>{model.Days}</span> من رصيدك<br />
+                              السبب: <span class='highlight'>{model.Notes}</span>
+                            </p>
+                            <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>01127471188</strong></p>
+                            <div class='footer'>
+                              مع تحياتنا<br />
+                              فريق دعم إجازاتي
+                            </div>
+                          </div>
+                        </body>
+                        </html>"
+                    };
+
+                    await _EmailService.SendEmail(emailrequest);
                 }
                 await _accountService.Update(user);
 
-
+                
                 return Ok(new { message = "تم تنفيذ طلبك بنجاح." });
+
 
             }
             catch (Exception ex)

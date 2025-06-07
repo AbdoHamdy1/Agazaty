@@ -9,6 +9,7 @@ namespace Agazaty.Data.DTOs.PermitLeavesDTOs
         public double Hours { get; set; }
         [Required]
         public DateTime Date { get; set; }
+        public bool Active { get; set; }
         public string UserName { get; set; }
         public string UserID { get; set; }
         public string FirstName { get; set; }

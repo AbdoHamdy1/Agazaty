@@ -4,6 +4,7 @@
     {
         public int Days { get; set; }
         public bool Decision { get; set; }
+        public string Notes { get; set; }
     }
 
 }

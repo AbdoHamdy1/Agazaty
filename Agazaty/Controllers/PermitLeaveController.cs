@@ -1,12 +1,15 @@
 ﻿using Agazaty.Data.Base;
 using Agazaty.Data.DTOs.DepartmentDTOs;
+using Agazaty.Data.DTOs.NormalLeaveDTOs;
 using Agazaty.Data.DTOs.PermitLeavesDTOs;
+using Agazaty.Data.Email;
 using Agazaty.Data.Services.Interfaces;
 using Agazaty.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NormalLeaveTask.Models;
 using System;
 using System.Data;
 using System.Net.Http;
@@ -53,7 +56,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
             }
         }
-        [Authorize(Roles = "مدير الموارد البشرية")]
+        [Authorize]
         [HttpGet("GetPermitLeaveById/{leaveID:guid}", Name = "GetPermitLeave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -91,7 +94,7 @@ namespace Agazaty.Controllers
                 var permitLeaves = await _Permitbase.GetAll();
                 if (!permitLeaves.Any())
                 {
-                    return NotFound(new { Message = "لا توجد تصاريح." });
+                    return NotFound(new { Message = "لا توجد تصاريح لم يتم حصرها." });
                 }
 
                 var leaves = _mapper.Map<IEnumerable<PermitLeaveDTO>>(permitLeaves);
@@ -220,7 +223,7 @@ namespace Agazaty.Controllers
                 if (await _accountService.FindById(model.UserId) is null) return BadRequest(new { Message = "المستخدم غير موجود." });
 
                 var permitLeave = _mapper.Map<PermitLeave>(model);
-
+                permitLeave.Active = true;
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 if (file != null)
                 {          
@@ -260,6 +263,41 @@ namespace Agazaty.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة طلبك.", error = ex.Message });
+            }
+        }
+        [Authorize(Roles = "مدير الموارد البشرية")]
+        [Consumes("multipart/form-data")]
+        [HttpPut("SoftDeletePermitLeave/{leaveID:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SoftDeletePermitLeave([FromRoute] Guid leaveID)
+        {
+            if (leaveID == Guid.Empty)
+                return BadRequest(new { message = "معرّف التصريح غير صالح." });
+
+            try
+            {
+                var PermitLeave = await _Permitbase.Get(n =>
+                    n.Id == leaveID);
+
+                //if (PermitLeave == null)
+                //{
+                //    return NotFound(new { message = "لم يتم العثور على تصريح أو أنه غير قابل للتحديث." });
+                //}
+
+                // Update properties
+                PermitLeave.Active = false;
+                await _Permitbase.Update(PermitLeave);
+
+                return Ok(new
+                {
+                    message = "تم الحذف بنجاح.",
+                    Leave = PermitLeave,
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "حدث خطأ أثناء الحذف.", error = ex.Message });
             }
         }
         [Authorize(Roles = "مدير الموارد البشرية")]
