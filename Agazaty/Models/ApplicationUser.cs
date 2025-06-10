@@ -10,20 +10,20 @@ namespace Agazaty.Models
     public class ApplicationUser : IdentityUser
     {
         [Required]
-        [RegularExpression(@"^[\u0621-\u063A\u0641-\u064A\u0622-\u0626\u0640]+$",
-        ErrorMessage = "يجب أن يحتوي الاسم الأول على حروف عربية فقط بدون أرقام أو رموز أو مسافات")]
+        [RegularExpression(@"^[\u0621-\u063A\u0641-\u064A\u0622-\u0626\u0640\s]+$",
+        ErrorMessage = "يجب أن يحتوي الاسم الأول على حروف عربية ومسافات فقط بدون أرقام أو رموز")]
         public string FirstName { get; set; }
         [Required]
-        [RegularExpression(@"^[\u0621-\u063A\u0641-\u064A\u0622-\u0626\u0640]+$",
-        ErrorMessage = "يجب أن يحتوي الاسم الثاني على حروف عربية فقط بدون أرقام أو رموز أو مسافات")]
+        [RegularExpression(@"^[\u0621-\u063A\u0641-\u064A\u0622-\u0626\u0640\s]+$",
+        ErrorMessage = "يجب أن يحتوي الاسم الثاني على حروف عربية ومسافات فقط بدون أرقام أو رموز")]
         public string SecondName { get; set; }
         [Required]
-        [RegularExpression(@"^[\u0621-\u063A\u0641-\u064A\u0622-\u0626\u0640]+$",
-        ErrorMessage = "يجب أن يحتوي الاسم الثالث على حروف عربية فقط بدون أرقام أو رموز أو مسافات")]
+        [RegularExpression(@"^[\u0621-\u063A\u0641-\u064A\u0622-\u0626\u0640\s]+$",
+        ErrorMessage = "يجب أن يحتوي الاسم الثالث على حروف عربية ومسافات فقط بدون أرقام أو رموز")]
         public string ThirdName { get; set; }
         [Required]
-        [RegularExpression(@"^[\u0621-\u063A\u0641-\u064A\u0622-\u0626\u0640]+$",
-        ErrorMessage = "يجب أن يحتوي الاسم الرابع على حروف عربية فقط بدون أرقام أو رموز أو مسافات")]
+        [RegularExpression(@"^[\u0621-\u063A\u0641-\u064A\u0622-\u0626\u0640\s]+$",
+        ErrorMessage = "يجب أن يحتوي الاسم الرابع على حروف عربية ومسافات فقط بدون أرقام أو رموز")]
         public string ForthName { get; set; }
         [Required]
         public DateTime DateOfBirth { get; set; }

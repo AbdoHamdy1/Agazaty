@@ -16,6 +16,7 @@ using static System.Net.WebRequestMethods;
 using System.Security.Principal;
 using System.Runtime.InteropServices;
 using Agazaty.Data.DTOs.AccountDTOs;
+using System.Globalization;
 
 namespace Agazaty.Controllers
 {
@@ -64,6 +65,20 @@ namespace Agazaty.Controllers
 
         //    return Ok(new { year, holidays = officialHolidaysByYear[year] });
         //}
+
+        private string ToArabicDigits(string input)
+        {
+            char[] arabicDigits = { '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩' };
+            var result = new System.Text.StringBuilder();
+            foreach (char c in input)
+            {
+                if (char.IsDigit(c))
+                    result.Append(arabicDigits[c - '0']);
+                else
+                    result.Append(c);
+            }
+            return result.ToString();
+        }
         [Authorize]
         [HttpGet("GetNormalLeaveById/{leaveID:guid}")]
         public async Task<IActionResult> GetNormalLeaveById(Guid leaveID)
@@ -573,6 +588,10 @@ namespace Agazaty.Controllers
         [HttpPost("MinusOrAddNormalLeavesToUser/{UserID}")]
         public async Task<IActionResult> MinusOrAddNormalLeavesToUser(string UserID, [FromBody] MinusOrAddNormalLeavesToUser model)
         {
+            var User = await _accountService.FindById(UserID);
+            var UserNameForEmail = $"{User.FirstName} {User.SecondName} {User.ThirdName} {User.ForthName}";
+
+            var UserGender = (User.Gender == "ذكر") ? "عزيزي" : "عزيزتي";
 
             if (string.IsNullOrWhiteSpace(UserID))
                 return BadRequest(new { message = "معرف المستخدم غير صالح." });
@@ -587,11 +606,11 @@ namespace Agazaty.Controllers
                 if (model.Decision)
                 {
                     user.NormalLeavesCount += model.Days;
-
+                   
                     var emailrequest = new EmailRequest
                     {
                         Email = user.Email,
-                        Subject = $"تم إضافة عدد {model.Days} أيام لرصيد اجازاتك",
+                        Subject = $"تم إضافة عدد {ToArabicDigits(model.Days.ToString())} أيام لرصيد اجازاتك",
                         // حساب صيغة الأيام
 
                         Body = $@"
@@ -611,14 +630,14 @@ namespace Agazaty.Controllers
                                   max-width: 600px;
                                   margin: auto;
                                   background-color: #ffffff;
-                                  border: 1px solid #e0e0e0;
+                                  border: 1px solid #00ff00;
                                   border-radius: 8px;
                                   padding: 30px;
                                   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
                                   text-align: right;
                                 }}
                                 h2 {{
-                                  color: #2c3e50;
+                                  color: #00b300;
                                   text-align: center;
                                 }}
                                 p {{
@@ -641,12 +660,13 @@ namespace Agazaty.Controllers
                             <body>
                               <div class='container'>
                                 <h2>إشعار بزيادة رصيد اجازتك</h2>
-                                <p>عزيزي المستخدم</p>
+                            
+                                <p>{UserGender}: {UserNameForEmail}</p>
                                 <p>
-                                  تمت إضافة <span class='highlight'>{model.Days}</span> إلى رصيدك<br />
-                                  السبب: <span class='highlight'>{model.Notes}</span>
+                                  تمت إضافة <span class='highlight'>{ToArabicDigits(model.Days.ToString())}</span>  أيام لرصيد اجازاتك <br />
+                                  السبب: <span class='highlight'>{ToArabicDigits(model.Notes.ToString())}</span>
                                 </p>
-                                <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>01127471188</strong></p>
+                                <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>٠١١٢٧٤٧١١٨٨</strong></p>
                                 <div class='footer'>
                                   مع تحياتنا<br />
                                   فريق دعم إجازاتي
@@ -664,7 +684,8 @@ namespace Agazaty.Controllers
                     var emailrequest = new EmailRequest
                     {
                         Email = user.Email,
-                        Subject = $"تم خصم عدد {model.Days} من رصيد اجازاتك أيام",
+                       // Subject=$"تم خصم عدد {ToArabicDigits(model.Days.ToString())}أيام من رصيد اجازاتك",
+                       Subject=$"تم خصم عدد {ToArabicDigits(model.Days.ToString())} أيام من رصيد اجازاتك",
                         Body = $@"
                         <!DOCTYPE html>
                         <html lang='ar'>
@@ -682,7 +703,7 @@ namespace Agazaty.Controllers
                               max-width: 600px;
                               margin: auto;
                               background-color: #ffffff;
-                              border: 1px solid #e0e0e0;
+                              border: 1px solid #ff0000;
                               border-radius: 8px;
                               padding: 30px;
                               box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -712,12 +733,14 @@ namespace Agazaty.Controllers
                         <body>
                           <div class='container'>
                             <h2>إشعار بخصم من رصيد اجازاتك</h2>
-                            <p>عزيزي المستخدم</p>
+                            
+                            <p>{UserGender}: {UserNameForEmail}</p>
+
                             <p>
-                              تم خصم <span class='highlight'>{model.Days}</span> من رصيدك<br />
-                              السبب: <span class='highlight'>{model.Notes}</span>
+                              تم خصم <span class='highlight'>{ToArabicDigits(model.Days.ToString())}</span> من رصيد اجازاتك <br />
+                              السبب: <span class='highlight'>{ToArabicDigits(model.Notes.ToString())}</span>
                             </p>
-                            <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>01127471188</strong></p>
+                            <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>٠١١٢٧٤٧١١٨٨</strong></p>
                             <div class='footer'>
                               مع تحياتنا<br />
                               فريق دعم إجازاتي
@@ -825,7 +848,7 @@ namespace Agazaty.Controllers
                             if (currentTime.TimeOfDay > cutoffTime)
                             {
                                 // Reject if current time is 8:30 AM or later
-                                return BadRequest(new { message = "Administrative staff can only submit requests before or equal 8:30 AM." });
+                                return BadRequest(new { message = "يُسمح فقط للموظفين الإداريين وهيئة التدريس بتقديم الطلبات في أو قبل الساعة 8:30 صباحًا." });
                             }
                         }
                         else
@@ -836,7 +859,7 @@ namespace Agazaty.Controllers
                             if (currentTime.TimeOfDay > cutoffTime)
                             {
                                 // Reject if current time is 7:30 AM or later
-                                return BadRequest(new { message = "Nonadministrative staff can only submit requests before or equal 7:30 AM." });
+                                return BadRequest(new { message = "يُسمح للموظفين غير الإداريين بتقديم الطلبات في أو قبل الساعة 7:30 صباحًا فقط." });
                             }
                         }
                     }
@@ -1280,16 +1303,78 @@ namespace Agazaty.Controllers
                         user.NormalLeavesCount -= user.TakenNormalLeavesCount;
                         user.Counts = CountsFromNormalLeaveTypes.FromNormalLeave;
                     }
-
-
+                    
                     NormalLeave.LeaveStatus = LeaveStatus.Accepted;
                     NormalLeave.Holder = Holder.NotWaiting;
+                    var UserNameForEmail = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
 
-
+                    var UserGender = (user.Gender == "ذكر") ? "عزيزي" : "عزيزتي";
                     var emailrequest = new EmailRequest
                     {
                         Email = user.Email,
-                        Subject = "تم قبول إجازتك الإعتيادية المطلوبة."
+                        Subject = "تم قبول إجازتك الإعتيادية المطلوبة.",
+                        Body = $@"
+                            <!DOCTYPE html>
+                            <html lang='ar'>
+                            <head>
+                              <meta charset='UTF-8'>
+                              <style>
+                                body {{
+                                  font-family: 'Tahoma', sans-serif;
+                                  direction: rtl;
+                                  unicode-bidi: plaintext;
+                                  background-color: #f9f9f9;
+                                  padding: 20px;
+                                }}
+                                .container {{
+                                  max-width: 600px;
+                                  margin: auto;
+                                  background-color: #ffffff;
+                                  border: 1px solid #00ff00;
+                                  border-radius: 8px;
+                                  padding: 30px;
+                                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                                  text-align: right;
+                                }}
+                                h2 {{
+                                  color: #00b300;
+                                  text-align: center;
+                                }}
+                                p {{
+                                  font-size: 16px;
+                                  color: #333333;
+                                  line-height: 1.6;
+                                }}
+                                .footer {{
+                                  margin-top: 30px;
+                                  text-align: center;
+                                  font-size: 14px;
+                                  color: #777777;
+                                }}
+                                .highlight {{
+                                  color: #27ae60;
+                                  font-weight: bold;
+                                }}
+                              </style>
+                            </head>
+                            <body>
+                              <div class='container'>
+                                <h2>إشعار بقبول إجازتك الاعتيادية المطلوبة</h2>
+                                  <p>{UserGender}: {UserNameForEmail}</p>
+                                <p>
+                                  عدد أيام الإجازة: <span class='highlight'>{ToArabicDigits(NormalLeave.Days.ToString())}</span><br />
+                                  تاريخ البداية: <span class='highlight'>{ToArabicDigits(NormalLeave.StartDate.ToString("dd/MM/yyyy", new CultureInfo("ar-EG")))}</span><br />
+                                  تاريخ النهاية: <span class='highlight'>{ToArabicDigits(NormalLeave.EndDate.ToString("dd/MM/yyyy", new CultureInfo("ar-EG")))}</span>
+                                </p>
+                                <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>٠١١٢٧٤٧١١٨٨</strong></p>
+                                <div class='footer'>
+                                  مع تحياتنا<br />
+                                  فريق دعم إجازاتي
+                                </div>
+                              </div>
+                            </body>
+                            </html>"
+
                     };
                     await _EmailService.SendEmail(emailrequest);
                 }
@@ -1300,12 +1385,81 @@ namespace Agazaty.Controllers
                     NormalLeave.RejectedBy = RejectedBy.GeneralManager;
                     NormalLeave.Holder = Holder.NotWaiting;
 
+                    var generalManagername = await _accountService.FindById(NormalLeave.General_ManagerID);
+                    var GeneralManagerNameForEmail = $"{generalManagername.FirstName} {generalManagername.SecondName} {generalManagername.ThirdName} {generalManagername.ForthName}";
 
+                    NormalLeave.Holder = Holder.NotWaiting;
+                    var UserNameForEmail = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
 
+                    var UserGender = (user.Gender == "ذكر") ? "عزيزي" : "عزيزتي";
                     var emailrequest = new EmailRequest
                     {
                         Email = user.Email,
-                        Subject = "تم رفض إجازتك الإعتيادية المطلوبة."
+                        Subject = "تم رفض إجازتك الإعتيادية المطلوبة.",
+                        Body= $@"
+                            <!DOCTYPE html>
+                            <html lang='ar'>
+                            <head>
+                              <meta charset='UTF-8'>
+                              <style>
+                                body {{
+                                  font-family: 'Tahoma', sans-serif;
+                                  direction: rtl;
+                                  unicode-bidi: plaintext;
+                                  background-color: #f9f9f9;
+                                  padding: 20px;
+                                }}
+                                .container {{
+                                  max-width: 600px;
+                                  margin: auto;
+                                  background-color: #ffffff;
+                                  border: 1px solid #ff0000;
+                                  border-radius: 8px;
+                                  padding: 30px;
+                                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                                  text-align: right;
+                                }}
+                                h2 {{
+                                  color: #ff0000;
+                                  text-align: center;
+                                }}
+                                p {{
+                                  font-size: 16px;
+                                  color: #333333;
+                                  line-height: 1.6;
+                                }}
+                                .footer {{
+                                  margin-top: 30px;
+                                  text-align: center;
+                                  font-size: 14px;
+                                  color: #777777;
+                                }}
+                                .highlight {{
+                                  color: #e74c3c;
+                                  font-weight: bold;
+                                }}
+                              </style>
+                            </head>
+                            <body>
+                              <div class='container'>
+                                <h2>إشعار برفض إجازتك الاعتيادية المطلوبة</h2>
+                                <p>{UserGender}: {UserNameForEmail}</p>
+                                <p>
+                                 نأسف لإبلاغك بأنه قد تم رفض طلب الإجازة الخاص بك بواسطة المدير المختص :
+                                  <span class='highlight'>{GeneralManagerNameForEmail}</span><br />
+                                  عدد أيام الإجازة: <span class='highlight'>{ToArabicDigits(NormalLeave.Days.ToString())}</span><br />
+                                  تاريخ البداية: <span class='highlight'>{ToArabicDigits(NormalLeave.StartDate.ToString("dd/MM/yyyy", new CultureInfo("ar-EG")))}</span><br />
+                                  تاريخ النهاية: <span class='highlight'>{ToArabicDigits(NormalLeave.EndDate.ToString("dd/MM/yyyy", new CultureInfo("ar-EG")))}</span><br />
+                                  سبب الرفض: <span class='highlight'>{NormalLeave.DisapproveReasonOfGeneral_Manager}</span>
+                                </p>
+                                <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>٠١١٢٧٤٧١١٨٨</strong></p>
+                                <div class='footer'>
+                                  مع تحياتنا<br />
+                                  فريق دعم إجازاتي
+                                </div>
+                              </div>
+                            </body>
+                            </html>"
                     };
                     await _EmailService.SendEmail(emailrequest);
                 }
@@ -1314,7 +1468,7 @@ namespace Agazaty.Controllers
 
                 var leave = _mapper.Map<NormalLeaveDTO>(NormalLeave);
                 var coworker = await _accountService.FindById(NormalLeave.Coworker_ID);
-                var generalManager = await _accountService.FindById(NormalLeave.General_ManagerID); ;
+                var generalManager = await _accountService.FindById(NormalLeave.General_ManagerID);
                 var directManager = await _accountService.FindById(NormalLeave.Direct_ManagerID);
                 leave.GeneralManagerName = $"{generalManager.FirstName} {generalManager.SecondName} {generalManager.ThirdName} {generalManager.ForthName}";
                 leave.DirectManagerName = $"{directManager.FirstName} {directManager.SecondName} {directManager.ThirdName} {directManager.ForthName}";
@@ -1370,10 +1524,79 @@ namespace Agazaty.Controllers
                     NormalLeave.Holder = Holder.NotWaiting;
                     NormalLeave.RejectedBy = RejectedBy.DirectManager;
 
+                    var directManagername = await _accountService.FindById(NormalLeave.Direct_ManagerID);
+                    var DirectManagerNameForEmail = $"{directManagername.FirstName} {directManagername.SecondName} {directManagername.ThirdName} {directManagername.ForthName}";
+                    var UserNameForEmail = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
+
+                    var UserGender = (user.Gender == "ذكر") ? "عزيزي" : "عزيزتي";
                     var emailrequest = new EmailRequest
                     {
                         Email = user.Email,
-                        Subject = "تم رفض إجازتك الإعتيادية المطلوبة."
+                        Subject = "تم رفض إجازتك الإعتيادية المطلوبة.",
+                        Body = $@"
+                            <!DOCTYPE html>
+                            <html lang='ar'>
+                            <head>
+                              <meta charset='UTF-8'>
+                              <style>
+                                body {{
+                                  font-family: 'Tahoma', sans-serif;
+                                  direction: rtl;
+                                  unicode-bidi: plaintext;
+                                  background-color: #f9f9f9;
+                                  padding: 20px;
+                                }}
+                                .container {{
+                                  max-width: 600px;
+                                  margin: auto;
+                                  background-color: #ffffff;
+                                  border: 1px solid #ff0000;
+                                  border-radius: 8px;
+                                  padding: 30px;
+                                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                                  text-align: right;
+                                }}
+                                h2 {{
+                                  color: #ff0000;
+                                  text-align: center;
+                                }}
+                                p {{
+                                  font-size: 16px;
+                                  color: #333333;
+                                  line-height: 1.6;
+                                }}
+                                .footer {{
+                                  margin-top: 30px;
+                                  text-align: center;
+                                  font-size: 14px;
+                                  color: #777777;
+                                }}
+                                .highlight {{
+                                  color: #e74c3c;
+                                  font-weight: bold;
+                                }}
+                              </style>
+                            </head>
+                            <body>
+                              <div class='container'>
+                                <h2>إشعار برفض إجازتك الاعتيادية المطلوبة</h2>
+                                <p>{UserGender}: {UserNameForEmail}</p>
+                                <p>
+                                 نأسف لإبلاغك بأنه قد تم رفض طلب الإجازة الخاص بك بواسطة المدير المباشر :
+                                  <span class='highlight'>{DirectManagerNameForEmail}</span><br />
+                                  عدد أيام الإجازة: <span class='highlight'>{ToArabicDigits(NormalLeave.Days.ToString())}</span><br />
+                                  تاريخ البداية: <span class='highlight'>{ToArabicDigits(NormalLeave.StartDate.ToString("dd/MM/yyyy", new CultureInfo("ar-EG")))}</span><br />
+                                  تاريخ النهاية: <span class='highlight'>{ToArabicDigits(NormalLeave.EndDate.ToString("dd/MM/yyyy", new CultureInfo("ar-EG")))}</span><br />
+                                  سبب الرفض: <span class='highlight'>{NormalLeave.DisapproveReasonOfDirect_Manager}</span>
+                                </p>
+                                <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>٠١١٢٧٤٧١١٨٨</strong></p>
+                                <div class='footer'>
+                                  مع تحياتنا<br />
+                                  فريق دعم إجازاتي
+                                </div>
+                              </div>
+                            </body>
+                            </html>"
                     };
                     await _EmailService.SendEmail(emailrequest);
                 }
@@ -1436,11 +1659,78 @@ namespace Agazaty.Controllers
                     NormalLeave.Holder = Holder.NotWaiting;
                     NormalLeave.RejectedBy = RejectedBy.CoWorker;
 
+                    var CoworkerName = await _accountService.FindById(NormalLeave.Coworker_ID);
+                    var CoworkerNameNameForEmail = $"{CoworkerName.FirstName} {CoworkerName.SecondName} {CoworkerName.ThirdName} {CoworkerName.ForthName}";
+                    var UserNameForEmail = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
 
+                    var UserGender = (user.Gender == "ذكر") ? "عزيزي" : "عزيزتي";
                     var emailrequest = new EmailRequest
                     {
                         Email = user.Email,
-                        Subject = "تم رفض إجازتك الإعتيادية المطلوبة."
+                        Subject = "تم رفض إجازتك الإعتيادية المطلوبة.",
+                        Body = $@"
+                            <!DOCTYPE html>
+                            <html lang='ar'>
+                            <head>
+                              <meta charset='UTF-8'>
+                              <style>
+                                body {{
+                                  font-family: 'Tahoma', sans-serif;
+                                  direction: rtl;
+                                  unicode-bidi: plaintext;
+                                  background-color: #f9f9f9;
+                                  padding: 20px;
+                                }}
+                                .container {{
+                                  max-width: 600px;
+                                  margin: auto;
+                                  background-color: #ffffff;
+                                  border: 1px solid #ff0000;
+                                  border-radius: 8px;
+                                  padding: 30px;
+                                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                                  text-align: right;
+                                }}
+                                h2 {{
+                                  color: #ff0000;
+                                  text-align: center;
+                                }}
+                                p {{
+                                  font-size: 16px;
+                                  color: #333333;
+                                  line-height: 1.6;
+                                }}
+                                .footer {{
+                                  margin-top: 30px;
+                                  text-align: center;
+                                  font-size: 14px;
+                                  color: #777777;
+                                }}
+                                .highlight {{
+                                  color: #e74c3c;
+                                  font-weight: bold;
+                                }}
+                              </style>
+                            </head>
+                            <body>
+                              <div class='container'>
+                                <h2>إشعار برفض إجازتك الاعتيادية المطلوبة</h2>
+                                <p>{UserGender}: {UserNameForEmail}</p>
+                                <p>
+                                 نأسف لإبلاغك بأنه قد تم رفض طلب الإجازة الخاص بك بواسطة القائم بالعمل :
+                                  <span class='highlight'>{CoworkerNameNameForEmail}</span><br />
+                                  عدد أيام الإجازة: <span class='highlight'>{ToArabicDigits(NormalLeave.Days.ToString())}</span><br />
+                                  تاريخ البداية: <span class='highlight'>{ToArabicDigits(NormalLeave.StartDate.ToString("dd/MM/yyyy", new CultureInfo("ar-EG")))}</span><br />
+                                  تاريخ النهاية: <span class='highlight'>{ToArabicDigits(NormalLeave.EndDate.ToString("dd/MM/yyyy", new CultureInfo("ar-EG")))}</span><br />
+                                </p>
+                                <p>لأي استفسار، يرجى التواصل معنا على الرقم: <strong>٠١١٢٧٤٧١١٨٨</strong></p>
+                                <div class='footer'>
+                                  مع تحياتنا<br />
+                                  فريق دعم إجازاتي
+                                </div>
+                              </div>
+                            </body>
+                            </html>"
                     };
                     await _EmailService.SendEmail(emailrequest);
                 }

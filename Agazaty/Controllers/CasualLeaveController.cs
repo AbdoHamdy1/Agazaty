@@ -32,7 +32,7 @@ namespace Agazaty.Controllers
             _leaveValidationService = leaveValidationService;
             _departmentBase = basedepartment;
         }
-        [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize]
         [HttpGet("GetCasualLeaveById/{leaveID:guid}", Name = "GetCasualLeave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

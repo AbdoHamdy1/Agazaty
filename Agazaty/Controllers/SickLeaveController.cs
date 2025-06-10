@@ -34,7 +34,7 @@ namespace Agazaty.Controllers
             _leaveValidationService = leaveValidationService;
             _appDbContext = appDbContext;
         }
-        [Authorize(Roles = "عميد الكلية,أمين الكلية,مدير الموارد البشرية")]
+        [Authorize]
         [HttpGet("GetSickLeaveById/{leaveID:guid}")]
         public async Task<IActionResult> GetSickLeaveById(Guid leaveID)
         {
