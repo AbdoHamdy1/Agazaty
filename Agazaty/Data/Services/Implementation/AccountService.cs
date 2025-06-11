@@ -476,9 +476,22 @@ namespace Agazaty.Data.Services.Implementation
             var emailrequest = new EmailRequest
             {
                 Email = account.Email,
-                Subject = "الرقم السري الخاص بك",
-                Body = $"الرقم السري الخاص بك هو: {OTP}"
+                Subject = "الكود السري الخاص بك",
+                Body = $@"
+                <div style='font-family: Arial; direction: rtl; text-align: right; border: 2px solid #2E86C1; border-radius: 10px; padding: 20px; max-width: 500px; margin: auto;'>
+                    <h3>مرحبًا،</h3>
+                    <p>الكود السري الخاص بك هو:</p>
+                    <div style='text-align: center; margin: 20px 0;'>
+                        <span style='display: inline-block; padding: 10px 20px; border: 2px solid #2E86C1; border-radius: 8px; font-size: 24px; color: #2E86C1;'>
+                            {OTP}
+                        </span>
+                    </div>
+                    <p>يرجى عدم مشاركة هذا الكود مع أي شخص.</p>
+                    <br/>
+                    <p>مع تحيات،<br/>فريق دعم اجازاتي</p>
+                </div>"
             };
+
             await _EmailService.SendEmail(emailrequest);
 
             return new ForgetPassResponse { Email = account.Email, IsAuthenticated=true, Message = "تم إرسال الرقم السري إلى بريدك الإلكتروني."};

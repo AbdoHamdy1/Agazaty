@@ -880,7 +880,7 @@ namespace Agazaty.Controllers
                     return BadRequest(new { messages = errors });
 
                 var normalLeave = _mapper.Map<NormalLeave>(model);
-                normalLeave.RequestDate = DateTime.UtcNow.Date;
+                normalLeave.RequestDate = DateTime.UtcNow.AddHours(3);
                 normalLeave.Year = normalLeave.RequestDate.Year;
                 normalLeave.LeaveStatus = LeaveStatus.Waiting;
                 normalLeave.Holder = Holder.CoWorker;
@@ -1003,7 +1003,7 @@ namespace Agazaty.Controllers
                 return StatusCode(500, new { message = "حدث خطأ أثناء معالجة الطلب.", error = ex.Message });
             }
         }
-        [Authorize(Roles = "مدير الموارد البشرية")]
+        //[Authorize(Roles = "مدير الموارد البشرية")]
         [HttpPut("UpdateNormalLeave/{leaveID:guid}")]
         public async Task<IActionResult> UpdateNormalLeave(Guid leaveID, [FromBody] UpdateNormalLeaveDTO model) // قطع الاجازة
         {
@@ -1034,11 +1034,11 @@ namespace Agazaty.Controllers
                 DateTime today = DateTime.Today;
                 var errors = new List<string>();
 
-                if (model.EndDate < today)
-                    errors.Add("تاريخ النهاية لا يمكن أن يكون في الماضي.");
+                //if (model.EndDate < today)
+                //    errors.Add("تاريخ النهاية لا يمكن أن يكون في الماضي.");
 
                 if (NormalLeave.StartDate > model.EndDate)
-                    errors.Add("تاريخ البدء لا يمكن أن يكون بعد تاريخ النهاية الجديد.");
+                    errors.Add("تاريخ النهاية لا يمكن ان يكون قبل تاريخ النهاية.");
 
                 if (errors.Any())
                     return BadRequest(new { messages = errors });
@@ -1048,9 +1048,9 @@ namespace Agazaty.Controllers
                 NormalLeave.NotesFromEmployee = model.NotesFromEmployee;
                 //user.NormalLeavesCount += (int)((NormalLeave.EndDate - model.EndDate).TotalDays + 1);
 
-                int returnedDays = await _leaveValidationService.CalculateLeaveDays(NormalLeave.EndDate,model.EndDate);
+                int returnedDays = await _leaveValidationService.CalculateLeaveDays(model.EndDate, NormalLeave.EndDate);
                 NormalLeave.EndDate = model.EndDate;
-                NormalLeave.Days = await _leaveValidationService.CalculateLeaveDays(model.EndDate,NormalLeave.StartDate);
+                NormalLeave.Days = await _leaveValidationService.CalculateLeaveDays(NormalLeave.StartDate, NormalLeave.EndDate);
                 if (user.Counts == CountsFromNormalLeaveTypes.FromNormalLeave)
                 {
                     user.NormalLeavesCount += returnedDays;

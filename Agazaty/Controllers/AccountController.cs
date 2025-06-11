@@ -483,32 +483,32 @@ namespace Agazaty.Controllers
                 // 3. Add headers
                 try
                 {
-                    worksheet.Cells[1, 1].Value = "UserName";
-                    worksheet.Cells[1, 2].Value = "PhoneNumber";
-                    worksheet.Cells[1, 3].Value = "Email";
-                    worksheet.Cells[1, 4].Value = "FirstName";
-                    worksheet.Cells[1, 5].Value = "SecondName";
-                    worksheet.Cells[1, 6].Value = "ThirdName";
-                    worksheet.Cells[1, 7].Value = "ForthName";
-                    worksheet.Cells[1, 8].Value = "DateOfBirth";
-                    worksheet.Cells[1, 9].Value = "Gender";
-                    worksheet.Cells[1, 10].Value = "HireDate";
-                    worksheet.Cells[1, 11].Value = "NationalID";
-                    worksheet.Cells[1, 12].Value = "Position";
-                    worksheet.Cells[1, 13].Value = "Department";
-                    worksheet.Cells[1, 14].Value = "Disability";
-                    worksheet.Cells[1, 15].Value = "Street";
-                    worksheet.Cells[1, 16].Value = "Governorate";
-                    worksheet.Cells[1, 17].Value = "State";
-                    worksheet.Cells[1, 18].Value = "NormalLeavesCount";
-                    worksheet.Cells[1, 19].Value = "CasualLeavesCount";
-                    worksheet.Cells[1, 20].Value = "NonChronicSickLeavesCount";
-                    worksheet.Cells[1, 21].Value = "NormalLeavesCount_47";
-                    worksheet.Cells[1, 22].Value = "NormalLeavesCount_81Before3Years";
-                    worksheet.Cells[1, 23].Value = "NormalLeavesCount_81Before2Years";
-                    worksheet.Cells[1, 24].Value = "NormalLeavesCount_81Before1Years";
-                    worksheet.Cells[1, 25].Value = "HowManyDaysFrom81And47";
-                    worksheet.Cells[1, 26].Value = "Role";
+                    worksheet.Cells[1, 1].Value = "اسم المستخدم";
+                    worksheet.Cells[1, 2].Value = "رقم الهاتف";
+                    worksheet.Cells[1, 3].Value = "البريد الإلكترني";
+                    worksheet.Cells[1, 4].Value = "الاسم الأول";
+                    worksheet.Cells[1, 5].Value = "الاسم الثاني";
+                    worksheet.Cells[1, 6].Value = "الاسم الثالث";
+                    worksheet.Cells[1, 7].Value = "الاسم الرابع";
+                    worksheet.Cells[1, 8].Value = "تاريخ الميلاد";
+                    worksheet.Cells[1, 9].Value = "الجنس";
+                    worksheet.Cells[1, 10].Value = "تاريخ التعيين";
+                    worksheet.Cells[1, 11].Value = "الرقم القومي";
+                    worksheet.Cells[1, 12].Value = "الدرجة";
+                    worksheet.Cells[1, 13].Value = "القسم";
+                    worksheet.Cells[1, 14].Value = "إعاقة";
+                    worksheet.Cells[1, 15].Value = "الشارع";
+                    worksheet.Cells[1, 16].Value = "محافظة";
+                    worksheet.Cells[1, 17].Value = "مدينة";
+                    worksheet.Cells[1, 18].Value = "عددالإجازات الأعتيادية";
+                    worksheet.Cells[1, 19].Value = "عدد الإجازات العارضة";
+                    worksheet.Cells[1, 20].Value = "عدد الإجازات المرضية الغير مزمنة";
+                    worksheet.Cells[1, 21].Value = "عدد الإجازات الاعتيادية_47";
+                    worksheet.Cells[1, 22].Value = "عدد الإجازات الاعتيادية_81 قبل 3 سنوات";
+                    worksheet.Cells[1, 23].Value = "عدد الإجازات الاعتيادية_81 قبل سنتين";
+                    worksheet.Cells[1, 24].Value = "عدد الإجازات الاعتيادية_81 قبل سنة";
+                    worksheet.Cells[1, 25].Value = "عدد الأيام المأخوذة هذه السنة من47 و 81";
+                    worksheet.Cells[1, 26].Value = "المنصب";
 
                     // Format headers
                     using (var range = worksheet.Cells[1, 1, 1, 26])
@@ -558,9 +558,20 @@ namespace Agazaty.Controllers
                         worksheet.Cells[row, 9].Value = user.Gender;
                         worksheet.Cells[row, 10].Value = user.HireDate.ToString("yyyy-MM-dd");
                         worksheet.Cells[row, 11].Value = user.NationalID;
-                        worksheet.Cells[row, 12].Value = user.position;
+                        if (user.position == 1)
+                        {
+                            worksheet.Cells[row, 12].Value = "غير إداري";
+                        }
+                        else if (role == "أمين الكلية" || role == "عميد الكلية")
+                        {
+                            worksheet.Cells[row, 12].Value = "إداري";
+                        }
+                        else
+                        {
+                            worksheet.Cells[row, 12].Value = "إداري";
+                        }
                         worksheet.Cells[row, 13].Value = user.Department?.Name;
-                        worksheet.Cells[row, 14].Value = user.Disability ? "1" : "0";
+                        worksheet.Cells[row, 14].Value = user.Disability ? "معاق" : "غير معاق";
                         worksheet.Cells[row, 15].Value = user.Street;
                         worksheet.Cells[row, 16].Value = user.Governorate;
                         worksheet.Cells[row, 17].Value = user.State;

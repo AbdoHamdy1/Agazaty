@@ -25,13 +25,15 @@ namespace Agazaty.Controllers
         private readonly IAccountService _accoutnService;
         private readonly IMapper _mapper;
         private readonly ILeaveValidationService _leaveValidationService;
+        private IEntityBaseRepository<Department> _departmentBase;
         private readonly AppDbContext _appDbContext;
-        public SickLeaveController(IAccountService accoutnService, IMapper mapper, IEntityBaseRepository<SickLeave> Ebase, ILeaveValidationService leaveValidationService, AppDbContext appDbContext)
+        public SickLeaveController(IAccountService accoutnService, IMapper mapper, IEntityBaseRepository<SickLeave> Ebase, ILeaveValidationService leaveValidationService, AppDbContext appDbContext,IEntityBaseRepository<Department> departmentBase)
         {
             _mapper = mapper;
             _base = Ebase;
             _accoutnService = accoutnService;
             _leaveValidationService = leaveValidationService;
+            _departmentBase = departmentBase;
             _appDbContext = appDbContext;
         }
         [Authorize]
@@ -51,10 +53,17 @@ namespace Agazaty.Controllers
 
                 var leave = _mapper.Map<SickLeaveDTO>(sickLeave);
                 var user = await _accoutnService.FindById(leave.UserID);
+                var generalmanager = await _accoutnService.FindById(leave.General_ManagerID);
+                leave.GeneralManagerName = $"{generalmanager.FirstName} {generalmanager.SecondName} {generalmanager.ThirdName} {generalmanager.ForthName}";
                 leave.PhoneNumber = user.PhoneNumber;
                 leave.UserName = $"{user.FirstName} {user.SecondName} {user.ThirdName} {user.ForthName}";
                 leave.FirstName = user.FirstName;
                 leave.SecondName = user.SecondName;
+                var department = await _departmentBase.Get(d => d.Id == user.Departement_ID);
+                if (department != null)
+                {
+                    leave.DepartmentName = department.Name;
+                }
                 return Ok(leave);
             }
             catch (Exception ex)
@@ -301,7 +310,7 @@ namespace Agazaty.Controllers
                     if (Supervisor == null) { return BadRequest(new { Message = "لا يوجد مستخدم لديه دور أمين كلية." }); }
                     sickLeave.General_ManagerID = Supervisor.Id;
                 }
-                sickLeave.RequestDate = DateTime.UtcNow.Date;
+                sickLeave.RequestDate = DateTime.UtcNow.AddHours(2);
                 sickLeave.Year = sickLeave.RequestDate.Year;
 
                 await _base.Add(sickLeave);

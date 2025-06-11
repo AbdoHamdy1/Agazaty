@@ -27,6 +27,8 @@ namespace Agazaty.Data.DTOs.SickLeaveDTOs
         public string UserID { get; set; }
         public string General_ManagerID { get; set; }
         public bool GeneralManagerDecision { get; set; }
+        public string GeneralManagerName { get; set; }
+        public string DepartmentName { get; set; }
 
         public string LeaveType { get; set; } = "مرضي";
 
